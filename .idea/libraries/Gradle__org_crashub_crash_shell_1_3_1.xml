@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.crashub:crash.shell:1.3.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.crashub/crash.shell/1.3.1/5ed74cc4ff403842c4da0b30bde3bd167abd3395/crash.shell-1.3.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.crashub/crash.shell/1.3.1/c3417b0cba3626caf5c27b8d19f7f2147c6d40de/crash.shell-1.3.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

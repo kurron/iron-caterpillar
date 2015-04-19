@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: info.cukes:cucumber-spring:1.2.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cukes/cucumber-spring/1.2.2/6d4785bf2f1f150ca2be91aeda0df0d75dcb66cf/cucumber-spring-1.2.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cukes/cucumber-spring/1.2.2/bc0cec719fba58133969c6aa2ca35048f6e73076/cucumber-spring-1.2.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
