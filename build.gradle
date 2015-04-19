@@ -27,8 +27,8 @@ plugins {
     id "org.asciidoctor.convert" version "1.5.2"
 }
 
-description = 'Example REST micro-service'
-group = 'org.kurron.example'
+description = 'An example of an application that can run both on-premise and in the cloud'
+group = 'org.kurron.iron.caterpillar'
 
 ext.coverageExcludes = ['org/kurron/example/rest/Application',
                         'org/kurron/example/rest/ApplicationProperties',
