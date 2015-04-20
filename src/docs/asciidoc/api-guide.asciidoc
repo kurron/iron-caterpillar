@@ -1,4 +1,4 @@
-= Example API Guide
+= Iron Caterpillar API Guide
 JVM Guy;
 :doctype: book
 :toc:
@@ -9,6 +9,13 @@ JVM Guy;
 
 [[overview]]
 = Overview
+
+[[service-overview]]
+== Service Overview
+
+Iron Caterpillar, aka IC, is an immutable blob storage service.  The bytes uploaded to the system are uninterpreted and stored in their
+raw format.  Meta-data that is sent during the upload is also stored along side the bytes.  Once a blob is uploaded, there is no way to
+remove it from the system.  Modifications, however, to the meta-data are allowed.
 
 [[overview-http-verbs]]
 == HTTP verbs
@@ -26,7 +33,7 @@ use of HTTP verbs.
 | Used to create a new resource
 
 | `PUT`
-| Not currently supported
+| Used to update the meta-data of an existing resource
 
 | `PATCH`
 | Not currently supported
@@ -35,7 +42,7 @@ use of HTTP verbs.
 | Not currently supported
 
 | `HEAD`
-| Not currently supported
+| Used to obtain meta-data about the resource but not download the blob itself
 
 | `OPTIONS`
 | Not currently supported
@@ -82,7 +89,7 @@ A small number of HTTP headers are required to be in all requests.
 | Header | Usage
 
 | X-Correlation-Id
-| The Application is part of a large network of cooperating services and publishes its log messages to a centralized server.  To facilitate the tracing of events and messages between systems, the application requires that a correlation id be provided with each request. If the client is the initiator of an action, then a new id should be generated.  If the client, however, is reacting to an outside event or message, the client should propogate the correlation id it was handed.
+| The Application is part of a large network of cooperating services and publishes its log messages to a centralized server.  To facilitate the tracing of events and messages between systems, the application requires that a correlation id be provided with each request. If the client is the initiator of an action, then a new id should be generated.  If the client, however, is reacting to an outside event or message, the client should propagate the correlation id it was handed.
 |===
 
 [[overview-errors]]
@@ -116,11 +123,11 @@ include::{generated}/failure-scenario/response.asciidoc[]
 == Hypermedia
 
 The application uses a simple hypermedia control that includes links to other resources that the client
-can use to navigate around the service. Links can be found beneath the `links` key.
+can use to navigate around the service. Links can be found beneath the `_links` key.
 
-IMPORTANT:  Users of the API should not created URIs themselves, instead they should use
+IMPORTANT:  Users of the API should not create URIs themselves, instead they should use
 the above-described links to navigate from resource to resource.  Failure to observe this rule will undoubtedly
-result in errors as services and URIs change.
+result in errors as service location and URIs change.
 
 [[overview-miscellaneous]]
 == Miscellaneous
@@ -135,10 +142,9 @@ API users will be prudent in their use of the service.
 [[resources-index]]
 == Binary Asset
 
-A Binary Asset is a collection of bytes that are temporarily stored on the server.
+A Binary Asset is a collection of bytes that are permanently stored on the server.
 During the upload process, additional meta-data can be added to the asset for later
-retrieval. Once an asset has expired and is evicted from the server, that asset will
-no longer be available for download.
+retrieval.
 
 [[api-discovery]]
 === API discovery
@@ -165,8 +171,6 @@ describing the successful operation as well as other resources that can be acces
 
 |===
 | Notable Header | Usage
-| X-Expiration-Minutes
-| Required. The number of minutes that the application should hold onto the asset before evicting it from the system.
 | Content-Type
 | Required. The MIME type of the asset.  The parameters portion of the MIME type can hold arbitrary key-value pairs which is useful for storing custom meta-data.
 |===
@@ -181,7 +185,7 @@ include::{generated}/asset-storage/request-response.asciidoc[]
 A `GET` request is used to fetch the asset.
 
 IMPORTANT: The `Accept` header must be configured to accept both the MIME type of the asset as
-well as the MIME type of the hypermedia control.  In event of a failure, the control will be
+well as the MIME type of the hypermedia control.  In the event of a failure, the control will be
 returned instead of the asset.
 
 ==== Example Conversation
@@ -190,10 +194,6 @@ include::{generated}/asset-download/request-response.asciidoc[]
 
 [[current-limitations]]
 === Current Limitations
-
-The service currently does not distinguish between assets that have expired and have been evicted from the system and
-assets that have never existed.  It should be possible to use the `410 Gone` status code to indicate evicted assets if
-enough API users request the feature.
 
 The service currently does support the ability to obtain the asset's meta-data other than what is returned as part of
 the original upload.  It should be possible to support a combination of `GET` and the `Accept` header to support obtaining
