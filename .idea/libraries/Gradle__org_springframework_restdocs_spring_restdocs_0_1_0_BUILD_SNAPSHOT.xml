@@ -2,10 +2,12 @@
   <library name="Gradle: org.springframework.restdocs:spring-restdocs:0.1.0.BUILD-SNAPSHOT">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.restdocs/spring-restdocs/0.1.0.BUILD-SNAPSHOT/97e801026f9c180124bc965baeabb17ecd06e663/spring-restdocs-0.1.0.BUILD-SNAPSHOT.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.restdocs/spring-restdocs/0.1.0.BUILD-SNAPSHOT/f50aee01fedb380de521d6d02815ee27d9874089/spring-restdocs-0.1.0.BUILD-SNAPSHOT.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.restdocs/spring-restdocs/0.1.0.BUILD-SNAPSHOT/6c5c1b7a480fea286d74df1250fe69b8701aae6d/spring-restdocs-0.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.restdocs/spring-restdocs/0.1.0.BUILD-SNAPSHOT/f04eb16d23de685f882bdf32abbda53132b2f118/spring-restdocs-0.1.0.BUILD-SNAPSHOT-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
