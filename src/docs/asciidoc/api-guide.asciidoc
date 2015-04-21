@@ -89,7 +89,7 @@ A small number of HTTP headers are required to be in all requests.
 | Header | Usage
 
 | X-Correlation-Id
-| The Application is part of a large network of cooperating services and publishes its log messages to a centralized server.  To facilitate the tracing of events and messages between systems, the application requires that a correlation id be provided with each request. If the client is the initiator of an action, then a new id should be generated.  If the client, however, is reacting to an outside event or message, the client should propagate the correlation id it was handed.
+| The service is part of a large network of cooperating services and publishes its log messages to a centralized server.  To facilitate the tracing of events and messages between systems, the application requires that a correlation id be provided with each request. If the client is the initiator of an action, then a new id should be generated.  If the client, however, is reacting to an outside event or message, the client should propagate the correlation id it was handed.
 |===
 
 [[overview-errors]]
@@ -123,7 +123,8 @@ include::{generated}/failure-scenario/response.asciidoc[]
 == Hypermedia
 
 The application uses a simple hypermedia control that includes links to other resources that the client
-can use to navigate around the service. Links can be found beneath the `_links` key.
+can use to navigate around the service. Links can be found beneath the `_links` key. The control is an
+extension of http://stateless.co/hal_specification.html[HAL media type].
 
 IMPORTANT:  Users of the API should not create URIs themselves, instead they should use
 the above-described links to navigate from resource to resource.  Failure to observe this rule will undoubtedly
