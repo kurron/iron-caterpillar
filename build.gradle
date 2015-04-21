@@ -27,20 +27,20 @@ plugins {
     id "org.asciidoctor.convert" version "1.5.2"
 }
 
-description = 'An example of an application that can run both on-premise and in the cloud'
+description = 'An iron of an application that can run both on-premise and in the cloud'
 group = 'org.kurron.iron.caterpillar'
 
-ext.coverageExcludes = ['org/kurron/example/rest/Application',
-                        'org/kurron/example/rest/ApplicationProperties',
-                        'org/kurron/example/rest/WebMvcConfiguration',
-                        'org/kurron/example/rest/outbound/RedisResource',
-                        'org/kurron/example/rest/inbound/MetaDataBlock',
-                        'org/kurron/example/rest/inbound/ErrorBlock',
-                        'org/kurron/example/rest/inbound/HypermediaControl',
-                        'org/kurron/example/rest/inbound/CustomHttpHeaders',
-                        'org/kurron/example/rest/inbound/HeaderBlock',
-                        'org/kurron/example/rest/exception/CustomErrorController',
-                        'org/kurron/example/rest/inbound/RestInboundGateway$_home_closure1',
+ext.coverageExcludes = ['org/kurron/iron/caterpillar/Application',
+                        'org/kurron/iron/caterpillar/ApplicationProperties',
+                        'org/kurron/iron/caterpillar/WebMvcConfiguration',
+                        'org/kurron/iron/caterpillar/outbound/RedisResource',
+                        'org/kurron/iron/caterpillar/inbound/MetaDataBlock',
+                        'org/kurron/iron/caterpillar/inbound/ErrorBlock',
+                        'org/kurron/iron/caterpillar/inbound/HypermediaControl',
+                        'org/kurron/iron/caterpillar/inbound/CustomHttpHeaders',
+                        'org/kurron/iron/caterpillar/inbound/HeaderBlock',
+                        'org/kurron/iron/caterpillar/exception/CustomErrorController',
+                        'org/kurron/iron/caterpillar/inbound/RestInboundGateway$_home_closure1',
                         'crash/commands/ExampleCommand'
 ]
 

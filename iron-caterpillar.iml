@@ -100,5 +100,6 @@
     <orderEntry type="library" scope="TEST" name="Gradle: info.cukes:cucumber-java:1.2.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: javax.servlet:javax.servlet-api:3.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: info.cukes:cucumber-html:0.2.3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.codehaus.groovy:groovy:2.3.11" level="project" />
   </component>
 </module>
