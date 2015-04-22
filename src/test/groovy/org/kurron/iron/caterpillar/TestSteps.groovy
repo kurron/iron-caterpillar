@@ -134,8 +134,8 @@ class TestSteps {
         sharedState.headers.set( CustomHttpHeaders.X_CORRELATION_ID, id )
     }
 
-    @Given( '^a Content-Type header filled in with media-type of the uploaded asset$' )
-    void 'a Content-Type header filled in with media-type of the uploaded asset'() {
+    @Given( '^a Content-Type header filled in with the media-type of the uploaded asset$' )
+    void 'a Content-Type header filled in with the media-type of the uploaded asset'() {
         sharedState.mediaType = generateMediaType()
         specifyContentType()
     }
