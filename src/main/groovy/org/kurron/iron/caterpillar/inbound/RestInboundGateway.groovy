@@ -124,7 +124,7 @@ class RestInboundGateway extends AbstractFeedbackAware {
         validateContentLengthHeader( requestHeaders )
         validatePayloadSize( payload )
         def contentType = extractContentType( requestHeaders )
-        def expirationMinutes = extractExpirationMinutes( requestHeaders )
+        def expirationMinutes = extractPayloadDigest( requestHeaders )
         def id = outboundGateway.store( new RedisResource( contentType: contentType.toString(), payload: payload ), minutesToSeconds( expirationMinutes ) )
         counterService.increment( 'example.upload' )
         gaugeService.submit( 'example.upload.payload.size', payload.length )
@@ -157,12 +157,12 @@ class RestInboundGateway extends AbstractFeedbackAware {
     }
 
     /**
-     * Extracts the expiration minutes from the HTTP headers. If not set, an error is thrown.
+     * Extracts the MD5 digest from the HTTP headers. If not set, an error is thrown.
      * @param headers the headers to extract from.
      * @return the extracted expiration minutes.
      */
-    private int extractExpirationMinutes( HttpHeaders headers ) {
-        def expirationMinutes = headers.getFirst( CustomHttpHeaders.X_EXPIRATION_MINUTES )
+    private int extractPayloadDigest( HttpHeaders headers ) {
+        def expirationMinutes = headers.get headers.getFirst( CustomHttpHeaders.X_EXPIRATION_MINUTES )
         if ( !expirationMinutes ) { throwPreconditionFailedError( CustomHttpHeaders.X_EXPIRATION_MINUTES ) }
         expirationMinutes as int
     }
