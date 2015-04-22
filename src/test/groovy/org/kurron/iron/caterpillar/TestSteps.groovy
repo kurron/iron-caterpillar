@@ -35,6 +35,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.util.DigestUtils
 import org.springframework.web.client.RestOperations
 import org.springframework.web.util.UriComponentsBuilder
 
@@ -100,6 +101,7 @@ class TestSteps {
         ResponseEntity<HypermediaControl> uploadEntity
         ResponseEntity<byte[]> downloadEntity
         byte[] bytes = new byte[0]
+        def digest = 'not set'
         def headers = new HttpHeaders()
         def mediaType  = new MediaType( ALL, ALL )
         URI uri
@@ -187,6 +189,11 @@ class TestSteps {
     void '^an X-Uploaded-By header filled in with a unique identifier of the entity uploading the asset$'() {
         sharedState.headers.set( CustomHttpHeaders.X_UPLOADED_BY, 'acceptance tester' )
 
+    }
+
+    @Given( '^a Content-MD(\\d+) header filled in with the digest of the asset being uploaded$' )
+    void '^a Content-MD5 header filled in with the digest of the asset being uploaded$'( int ignored ) {
+        sharedState.digest = DigestUtils.md5DigestAsHex( sharedState.bytes )
     }
 
     @Given( '^an asset to be uploaded$' )
