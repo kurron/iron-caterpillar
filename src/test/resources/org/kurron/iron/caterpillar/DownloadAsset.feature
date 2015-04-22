@@ -9,7 +9,7 @@ Feature: Download An Asset
 
   @happy
   Scenario: Successful Download
-    Given an Accept header filled in with the media-type of the asset and the media-type of the hypermedia control
+    Given an Accept header filled in with the media-type of the asset
     And a GET request is made to the URI
     Then a response with a 200 HTTP status code is returned
     And the Content-Type header matches the Accept header

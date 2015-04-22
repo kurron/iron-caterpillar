@@ -27,6 +27,7 @@ import org.kurron.iron.caterpillar.inbound.CustomHttpHeaders
 import org.kurron.iron.caterpillar.inbound.HypermediaControl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.SpringApplicationContextLoader
+import org.springframework.boot.test.WebIntegrationTest
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -42,7 +43,11 @@ import org.springframework.web.util.UriComponentsBuilder
  * by Cucumber unless special care is taken. If you word your features in a consistent manner, then
  * steps will automatically get reused and you won't have to keep writing the same test code.
  **/
-@ContextConfiguration( classes = [AcceptanceTestConfiguration], loader = SpringApplicationContextLoader )
+//@ContextConfiguration( classes = [AcceptanceTestConfiguration], loader = SpringApplicationContextLoader )
+
+@ContextConfiguration( loader = SpringApplicationContextLoader, classes = [Application, InboundIntegrationTestConfiguration] )
+@WebIntegrationTest( randomPort = true )
+
 @Slf4j
 @SuppressWarnings( ['GrMethodMayBeStatic', 'GStringExpressionWithinString'] )
 class TestSteps {
@@ -174,10 +179,14 @@ class TestSteps {
         specifyAcceptType()
     }
 
-    private specifyAcceptType( MediaType mediaType = MediaType.APPLICATION_JSON ) {
-        List<MediaType> acceptable = [mediaType]
-        acceptable.add( HypermediaControl.MEDIA_TYPE )
+    private specifyAcceptType( List<MediaType> acceptable = [MediaType.APPLICATION_JSON] ) {
         sharedState.headers.setAccept( acceptable )
+    }
+
+    @Given( '^an X-Uploaded-By header filled in with a unique identifier of the entity uploading the asset$' )
+    void '^an X-Uploaded-By header filled in with a unique identifier of the entity uploading the asset$'() {
+        sharedState.headers.set( CustomHttpHeaders.X_UPLOADED_BY, 'acceptance tester' )
+
     }
 
     @Given( '^an asset to be uploaded$' )
