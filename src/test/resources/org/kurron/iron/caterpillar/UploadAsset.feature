@@ -17,7 +17,6 @@ Feature: Upload An Asset
     When a POST request is made with the asset in the body
     Then a response with a 201 HTTP status code is returned
     And the Location header contains the URI of the uploaded asset
-    And the ETag header contains the current value of the asset
     And the hypermedia control contains the URI of the uploaded asset
     And the hypermedia control contains the meta-data of the uploaded asset
 
