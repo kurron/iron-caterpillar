@@ -194,6 +194,7 @@ class TestSteps {
     @Given( '^a Content-MD(\\d+) header filled in with the digest of the asset being uploaded$' )
     void '^a Content-MD5 header filled in with the digest of the asset being uploaded$'( int ignored ) {
         sharedState.digest = DigestUtils.md5DigestAsHex( sharedState.bytes )
+        sharedState.headers.set( CustomHttpHeaders.CONTENT_MD5, sharedState.digest )
     }
 
     @Given( '^an asset to be uploaded$' )

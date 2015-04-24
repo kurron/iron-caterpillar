@@ -39,4 +39,9 @@ class CustomHttpHeaders {
      * The identifier of the entity uploading the BLOB.
      */
     static final String X_UPLOADED_BY = 'X-Uploaded-By'
+
+    /**
+     * This is a standard header but Spring doesn't seem to have a constant for it.
+     */
+    static final String CONTENT_MD5 = 'Content-MD5'
 }
