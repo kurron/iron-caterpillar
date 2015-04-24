@@ -22,8 +22,8 @@ import org.springframework.hateoas.ResourceSupport
 import org.springframework.http.MediaType
 
 /**
- * The hypermedia REST control for the example resource.  Can be serialized into
- * both JSON and, potentially, XML.
+ * The hypermedia REST control for the BLOB resource.  Can be serialized into
+ * both JSON and XML.
  */
 @Canonical
 @JsonInclude( JsonInclude.Include.NON_NULL )
@@ -32,7 +32,7 @@ class HypermediaControl extends ResourceSupport {
     /**
      * The expected MIME type for the control.
      */
-    public static final String MIME_TYPE = 'application/json;type=example;version=1.0.0'
+    public static final String MIME_TYPE = 'application/json;type=blob-storage;version=1.0.0'
 
     /**
      * Convenience form of the MIME-TYPE for Spring MVC APIs.

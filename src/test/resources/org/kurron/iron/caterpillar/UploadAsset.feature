@@ -36,3 +36,12 @@ Feature: Upload An Asset
     Then a response with a 409 HTTP status code is returned
     And the hypermedia control describing the conflict is returned
 
+  @sad
+  Scenario: Unsupported Accept Format
+    Given an asset to be uploaded
+    And a Content-Length header filled in with the size, in bytes, of the asset being uploaded
+    And a Content-MD5 header filled in with the digest of the asset being uploaded
+    And an Accept header containing an unsupported media-type
+    When a POST request is made with the asset in the body
+    Then a response with a 406 HTTP status code is returned
+    And the hypermedia control describing the formatting problem is returned
