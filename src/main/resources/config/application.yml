@@ -1,9 +1,12 @@
 # Override the default values of the info endpoint
 info:
     app:
-        name: ${name}
-        description: ${description}
-        version: ${version}
+#        name: ${name}
+#        description: ${description}
+#        version: ${version}
+        name: iron-caterpillar
+        description: blah, blah, blah
+        version: 0.0.1
         realm: development
 
 # enable shutdown of application via a POST
