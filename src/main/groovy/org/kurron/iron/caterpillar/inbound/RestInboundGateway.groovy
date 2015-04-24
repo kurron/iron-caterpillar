@@ -165,7 +165,7 @@ class RestInboundGateway extends AbstractFeedbackAware {
      * @return the extracted expiration minutes.
      */
     private String extractPayloadDigest( HttpHeaders headers ) {
-        def digest = headers.get headers.getFirst( CustomHttpHeaders.CONTENT_MD5 )
+        def digest = headers.getFirst( CustomHttpHeaders.CONTENT_MD5 )
         if ( !digest ) { throwPreconditionFailedError( CustomHttpHeaders.CONTENT_MD5 ) }
         digest
     }

@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.util.DigestUtils
 import org.springframework.web.util.NestedServletException
 import org.kurron.iron.caterpillar.ApplicationPropertiesBuilder
 import org.kurron.iron.caterpillar.BaseUnitTest
@@ -51,8 +52,8 @@ class RestInboundGatewayUnitTest extends BaseUnitTest {
         given: 'an expected resource id'
         def id = randomUUID()
 
-        and: 'a number of minutes to wait until expiring the resource'
-        def expirationMinutes = randomNumberExclusive( 10 )
+        and: 'a digest of the resource'
+        def digest = DigestUtils.md5DigestAsHex( redisResource.payload )
 
         and: 'an expected resource uri'
         def expected = URI.create( "http://localhost/$id" )
@@ -62,13 +63,13 @@ class RestInboundGatewayUnitTest extends BaseUnitTest {
                 .content( redisResource.payload )
                 .contentType( redisResource.contentType )
                 .header( 'Content-Length', redisResource.payload.length )
-                .header( CustomHttpHeaders.X_EXPIRATION_MINUTES, expirationMinutes )
+                .header( CustomHttpHeaders.CONTENT_MD5, digest )
 
         when: 'the POST request is made'
         def result = mockMvc.perform( requestBuilder ).andReturn()
 
         then: 'the outbound gateway is called'
-        1 * outboundGateway.store( redisResource, expirationMinutes * 60 ) >> id
+        1 * outboundGateway.store( redisResource, digest * 60 ) >> id
 
         and: 'a 201 (CREATED) status code is returned'
         result
