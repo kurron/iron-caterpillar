@@ -27,17 +27,17 @@ class RedisServiceStub extends AbstractFeedbackAware implements PersistenceOutbo
     /**
      * A fake version of redis.
      **/
-    private final Map<UUID,RedisResource> redis = [:]
+    private final Map<UUID,BinaryAsset> redis = [:]
 
     @Override
-    UUID store( final RedisResource resource, final long expirationSeconds ) {
+    UUID store( final BinaryAsset resource, final long expirationSeconds ) {
         def id = UUID.randomUUID()
         redis[id] = resource
         id
     }
 
     @Override
-    RedisResource retrieve( final UUID id ) {
+    BinaryAsset retrieve( final UUID id ) {
         redis[id]
     }
 }

@@ -15,21 +15,38 @@
  */
 package org.kurron.iron.caterpillar.outbound
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.Canonical
 
 /**
  * Represents a resource that is saved to Redis as a hash data type.
  */
 @Canonical
-class RedisResource {
+class BinaryAsset
+{
 
     /**
      * The content type associated with the resource.
      */
+    @JsonProperty( 'content-type' )
     String contentType
+
+    /**
+     * The entity that uploaded the asset.
+     */
+    @JsonProperty( 'uploaded-by' )
+    String uploadedBy
+
+    /**
+     * The number of bytes the payload is.
+     **/
+    @JsonProperty( 'size' )
+    long size
 
     /**
      * The resource bytes.
      */
+    @JsonIgnore
     byte[] payload
 }

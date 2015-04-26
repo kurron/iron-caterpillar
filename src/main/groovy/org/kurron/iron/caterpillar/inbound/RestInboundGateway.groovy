@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import org.kurron.iron.caterpillar.outbound.PersistenceOutboundGateway
-import org.kurron.iron.caterpillar.outbound.RedisResource
 import org.kurron.stereotype.InboundRestGateway
 
 /**

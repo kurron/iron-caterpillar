@@ -21,10 +21,10 @@ import org.springframework.http.MediaType
 /**
  * Constructs an RedisResource object with reasonable defaults.
  */
-class RedisResourceBuilder extends Builder<RedisResource> {
+class RedisResourceBuilder extends Builder<BinaryAsset> {
 
     @Override
-    RedisResource build() {
-        new RedisResource( contentType: MediaType.APPLICATION_JSON_VALUE, payload: randomByteArray( 128 ) )
+    BinaryAsset build() {
+        new BinaryAsset( contentType: MediaType.APPLICATION_JSON_VALUE, payload: randomByteArray( 128 ) )
     }
 }

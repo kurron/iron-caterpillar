@@ -26,12 +26,12 @@ interface PersistenceOutboundGateway {
      * @param expirationSeconds the number of seconds to wait before expiring the resource.
      * @return the assigned id of the stored resource.
      */
-    UUID store( final RedisResource resource, final long expirationSeconds )
+    UUID store( final BinaryAsset resource, final long expirationSeconds )
 
     /**
      * Retrieves the resource associated with the provided id.
      * @param id the id of the resource to retrieve.
      * @return the resource.
      */
-    RedisResource retrieve( final UUID id )
+    BinaryAsset retrieve( final UUID id )
 }
