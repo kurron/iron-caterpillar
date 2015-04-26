@@ -42,7 +42,13 @@ class BinaryAsset
      * The number of bytes the payload is.
      **/
     @JsonProperty( 'size' )
-    long size
+    int size
+
+    /**
+     * The hex encoding the of 128 bit MD5 digest of the asset.
+     */
+    @JsonProperty( 'md5' )
+    String md5
 
     /**
      * The resource bytes.

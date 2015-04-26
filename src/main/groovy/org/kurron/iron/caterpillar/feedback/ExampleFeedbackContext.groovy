@@ -30,7 +30,7 @@ import org.kurron.feedback.FeedbackLevel
 enum ExampleFeedbackContext implements FeedbackContext {
 
     GENERIC_ERROR( 2000, 'The following error has occurred and was caught by the global error handler: {}', ERROR, QA ),
-    REDIS_STORE_INFO( 2001, 'Storing a {} byte payload with a content type of {} in Redis for {} seconds with a key of {}', INFO, DEVELOPMENT ),
+    REDIS_STORE_INFO( 2001, 'Storing a {} byte payload with a content type of {} and uploaded by {} with a key of {}', INFO, DEVELOPMENT ),
     REDIS_RETRIEVE_INFO( 2002, 'Retrieving payload from Redis with a key of {}', INFO, DEVELOPMENT ),
     REDIS_RESOURCE_NOT_FOUND( 2003, 'The resource with an id of {} was not found in the system', ERROR, QA ),
     PRECONDITION_FAILED( 2004, 'The required {} header was not found on an inbound REST request', ERROR, QA ),

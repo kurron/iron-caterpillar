@@ -15,10 +15,8 @@
  */
 package org.kurron.iron.caterpillar.outbound
 
-import org.kurron.feedback.exceptions.NotFoundError
-import org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext
-import org.springframework.beans.factory.annotation.Autowired
 import org.kurron.iron.caterpillar.BaseOutboundIntegrationTest
+import org.springframework.beans.factory.annotation.Autowired
 
 /**
  * Integration-level testing of the RedisOutboundGateway object.
@@ -33,28 +31,17 @@ class RedisOutboundGatewayComponentTest extends BaseOutboundIntegrationTest {
         given: 'a valid outbound gateway'
         assert sut
 
-        and: 'a resource to save'
-        def resource = new RedisResourceBuilder().build()
+        and: 'an asset to save'
+        def asset = new BinaryAssetBuilder().build()
 
-        and: 'seconds to wait until expiring the resource'
-        def expirationSeconds = 5
+        when: 'the asset is saved to redis'
+        def id = sut.store( asset )
 
-        when: 'the resource is saved to redis'
-        def id = sut.store( resource, expirationSeconds )
-
-        then: 'the resource can be retrieved immediately'
+        then: 'the asset can be retrieved immediately'
         def result = sut.retrieve( id )
 
         and: 'the expected bytes are returned'
         result
-        result == resource
-
-        when: 'the resource is retrieved again after the expiration duration'
-        sleep expirationSeconds * 1000
-        sut.retrieve( id )
-
-        then: 'the resource is no longer available'
-        def error = thrown( NotFoundError )
-        error.code == ExampleFeedbackContext.REDIS_RESOURCE_NOT_FOUND.code
+        result == asset
     }
 }

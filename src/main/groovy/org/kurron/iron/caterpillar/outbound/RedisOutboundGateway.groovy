@@ -20,10 +20,9 @@ import static org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext.REDIS_
 import static org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext.REDIS_STORE_INFO
 import org.kurron.feedback.AbstractFeedbackAware
 import org.kurron.feedback.exceptions.NotFoundError
-import java.util.concurrent.TimeUnit
+import org.kurron.stereotype.OutboundGateway
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisOperations
-import org.kurron.stereotype.OutboundGateway
 
 /**
  * Implementation of the outbound gateway that talks to Redis.
@@ -34,7 +33,7 @@ class RedisOutboundGateway extends AbstractFeedbackAware implements PersistenceO
     /**
      * Handles Redis interactions.
      */
-    private final RedisOperations<UUID, byte[]> redisOperations
+    private final RedisOperations<String, String> redisOperations
 
     /**
      * The key to use when storing and retrieving the resource's content type.
@@ -46,28 +45,47 @@ class RedisOutboundGateway extends AbstractFeedbackAware implements PersistenceO
      */
     private static final String PAYLOAD_KEY = 'payload'
 
+    /**
+     * The key to use when storing and retrieving the resource's uploaded by tag.
+     */
+    private static final String UPLOADED_BY_KEY = 'uploaded-by'
+
+    /**
+     * The key to use when storing and retrieving the resource's size.
+     */
+    private static final String SIZE_KEY = 'size'
+
     @Autowired
-    RedisOutboundGateway( final RedisOperations redisTemplate ) {
+    RedisOutboundGateway( final RedisOperations<String, String> redisTemplate ) {
         redisOperations = redisTemplate // WARNING: bean name must be 'redisTemplate' or injection fails
     }
 
     @Override
-    UUID store( final BinaryAsset resource, final long expirationSeconds ) {
-        def generatedId = UUID.randomUUID()
-        feedbackProvider.sendFeedback( REDIS_STORE_INFO, resource.payload.length, resource.contentType, expirationSeconds, generatedId )
-        redisOperations.opsForHash().putAll( generatedId, [(CONTENT_TYPE_KEY): resource.contentType, (PAYLOAD_KEY): resource.payload] )
-        redisOperations.expire( generatedId, expirationSeconds, TimeUnit.SECONDS )
-        generatedId
+    String store( final BinaryAsset asset ) {
+        feedbackProvider.sendFeedback( REDIS_STORE_INFO, asset.size, asset.contentType, asset.uploadedBy, asset.md5 )
+        Map<String,String> data = [(CONTENT_TYPE_KEY): asset.contentType,
+                                   (UPLOADED_BY_KEY): asset.uploadedBy,
+                                   (SIZE_KEY): Integer.toString( asset.size ),
+                                   (PAYLOAD_KEY): new String( asset.payload )]
+
+        if ( redisOperations.opsForHash(  ).keys( asset.md5 ) ) {
+            throw new UnsupportedOperationException( 'TODO: throw a custom exception' )
+        }
+        redisOperations.opsForHash().putAll( asset.md5, data )
+        asset.md5
     }
 
     @Override
-    BinaryAsset retrieve( final UUID id ) {
+    BinaryAsset retrieve( final String id ) {
         feedbackProvider.sendFeedback( REDIS_RETRIEVE_INFO, id )
         def entries = redisOperations.opsForHash().entries( id )
         if ( !entries ) {
             feedbackProvider.sendFeedback( REDIS_RESOURCE_NOT_FOUND, id )
             throw new NotFoundError( REDIS_RESOURCE_NOT_FOUND, id )
         }
-        new BinaryAsset( payload: entries[PAYLOAD_KEY] as byte[], contentType: entries[CONTENT_TYPE_KEY] as String )
+        new BinaryAsset( payload: entries[PAYLOAD_KEY] as byte[],
+                         uploadedBy: entries[UPLOADED_BY_KEY] as String,
+                         size: entries[SIZE_KEY] as int,
+                         contentType: entries[CONTENT_TYPE_KEY] as String )
     }
 }

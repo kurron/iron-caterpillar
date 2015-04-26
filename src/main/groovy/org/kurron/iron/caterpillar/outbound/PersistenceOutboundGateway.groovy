@@ -22,16 +22,15 @@ interface PersistenceOutboundGateway {
 
     /**
      * Store the provided resource.
-     * @param resource the resource to store, which includes the content type and bytes.
-     * @param expirationSeconds the number of seconds to wait before expiring the resource.
+     * @param asset the resource to store, which includes the content type and bytes.
      * @return the assigned id of the stored resource.
      */
-    UUID store( final BinaryAsset resource, final long expirationSeconds )
+    String store( final BinaryAsset asset )
 
     /**
      * Retrieves the resource associated with the provided id.
      * @param id the id of the resource to retrieve.
      * @return the resource.
      */
-    BinaryAsset retrieve( final UUID id )
+    BinaryAsset retrieve( final String id )
 }

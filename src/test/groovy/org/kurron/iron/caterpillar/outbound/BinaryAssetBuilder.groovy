@@ -19,6 +19,7 @@ package org.kurron.iron.caterpillar.outbound
 import org.kurron.iron.caterpillar.Builder
 import org.kurron.iron.caterpillar.Randomizer
 import org.springframework.http.MediaType
+import org.springframework.util.DigestUtils
 
 /**
  * Creates a BinaryAsset using randomized data.
@@ -38,6 +39,7 @@ class BinaryAssetBuilder extends Builder<BinaryAsset> {
             uploadedBy = theRandomizer.randomHexString()
             payload = theRandomizer.randomByteArray( 32 )
             size = payload.size()
+            md5 = DigestUtils.md5DigestAsHex( payload )
             it
         }
     }
