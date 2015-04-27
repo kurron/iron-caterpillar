@@ -15,12 +15,10 @@
  */
 package org.kurron.iron.caterpillar.outbound
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.Canonical
 
 /**
- * Represents a resource that is saved to Redis as a hash data type.
+ * Represents a resource that is saved to BLOB storage.
  */
 @Canonical
 class BinaryAsset
@@ -29,30 +27,25 @@ class BinaryAsset
     /**
      * The content type associated with the resource.
      */
-    @JsonProperty( 'content-type' )
     String contentType
 
     /**
-     * The entity that uploaded the asset.
+     * The identifier of the entity that uploaded the asset.
      */
-    @JsonProperty( 'uploaded-by' )
     String uploadedBy
 
     /**
-     * The number of bytes the payload is.
+     * The size of the payload, in bytes.
      **/
-    @JsonProperty( 'size' )
     int size
 
     /**
-     * The hex encoding the of 128 bit MD5 digest of the asset.
+     * The Base64 encoding the of 128 bit MD5 digest of the payload.
      */
-    @JsonProperty( 'md5' )
     String md5
 
     /**
-     * The resource bytes.
+     * The resource's bytes.
      */
-    @JsonIgnore
     byte[] payload
 }
