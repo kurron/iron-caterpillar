@@ -39,7 +39,7 @@ class BinaryAssetBuilder extends Builder<BinaryAsset> {
             uploadedBy = theRandomizer.randomHexString()
             payload = theRandomizer.randomByteArray( 32 )
             size = payload.size()
-            md5 = DigestUtils.md5DigestAsHex( payload )
+            md5 = Base64.encoder.encodeToString( DigestUtils.md5Digest( payload ) )
             it
         }
     }

@@ -17,6 +17,7 @@ package org.kurron.iron.caterpillar.inbound
 
 import org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext
 import groovy.util.logging.Slf4j
+import org.kurron.iron.caterpillar.outbound.BinaryAssetBuilder
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -24,6 +25,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.RequestEntity
 import org.kurron.iron.caterpillar.BaseInboundIntegrationTest
+import org.springframework.util.DigestUtils
 
 /**
  * Integration-level testing of the RestInboundGateway object.
@@ -32,14 +34,18 @@ import org.kurron.iron.caterpillar.BaseInboundIntegrationTest
 @Slf4j
 class RestInboundGatewayIntegrationTest extends BaseInboundIntegrationTest {
 
+    def asset = new BinaryAssetBuilder().build()
+
     def 'exercise asset storage and retrieval'() {
 
         given: 'a valid payload to store'
-        def payload = randomByteArray( 128 )
+        def payload = asset.payload
 
         and: 'required headers are set'
         def headers = buildHeaders()
         headers.setContentType( MediaType.IMAGE_GIF )
+        headers.set( CustomHttpHeaders.CONTENT_MD5, asset.md5 )
+        headers.set( CustomHttpHeaders.X_UPLOADED_BY, randomHexString() )
         def requestEntity = new HttpEntity( payload, headers )
 
         when: 'the payload is stored'

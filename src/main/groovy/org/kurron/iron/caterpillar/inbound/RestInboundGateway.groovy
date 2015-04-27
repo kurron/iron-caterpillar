@@ -27,6 +27,8 @@ import org.kurron.feedback.exceptions.PayloadTooLargeError
 import org.kurron.feedback.exceptions.PreconditionFailedError
 import org.kurron.iron.caterpillar.ApplicationProperties
 import javax.servlet.http.HttpServletRequest
+import org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext
+import org.kurron.iron.caterpillar.outbound.BinaryAsset
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.actuate.metrics.CounterService
 import org.springframework.boot.actuate.metrics.GaugeService
@@ -35,6 +37,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.util.DigestUtils
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -76,11 +79,6 @@ class RestInboundGateway extends AbstractFeedbackAware {
     private final ApplicationProperties configuration
 
     /**
-     * The number of seconds in a minute.
-     */
-    private static final int SECONDS_IN_A_MINUTE = 60
-
-    /**
      * Number of Bytes in a Megabyte.
      */
     @SuppressWarnings( 'DuplicateNumberLiteral' )
@@ -109,8 +107,7 @@ class RestInboundGateway extends AbstractFeedbackAware {
     }
 
     /**
-     * Store an asset temporarily. The asset is expired after the number of minutes specified in the X-Expiration-Minutes
-     * header. The location to the stored asset is returned in the body and the location header.
+     * Store an asset permanently. The location to the stored asset is returned in the body and the location header.
      * @param payload the binary asset to store.
      * @param requestHeaders the HTTP request headers.
      * @param request the servlet request being serviced.
@@ -124,14 +121,27 @@ class RestInboundGateway extends AbstractFeedbackAware {
         validatePayloadSize( payload )
         def contentType = extractContentType( requestHeaders )
         def digest = extractPayloadDigest( requestHeaders )
-        throw new UnsupportedOperationException( 'Not done yet' )
-/*
-        def id = outboundGateway.store( new RedisResource( contentType: contentType.toString(), payload: payload ), minutesToSeconds( expirationMinutes ) )
-        counterService.increment( 'example.upload' )
-        gaugeService.submit( 'example.upload.payload.size', payload.length )
-        gaugeService.submit( 'example.upload.expiration', expirationMinutes )
+        def uploadedBy = extractUploadedBy( requestHeaders )
+        validateDigest( payload, digest )
+        def asset = new BinaryAsset( contentType: contentType.toString(),
+                                     uploadedBy: uploadedBy,
+                                     size: payload.size(),
+                                     md5: digest,
+                                     payload: payload )
+        def id = outboundGateway.store( asset )
+        counterService.increment( 'iron-caterpillar.upload' )
+        gaugeService.submit( 'iron-caterpillar.upload.payload.size', payload.length )
         toResponseEntity( id, contentType.toString(), payload.length, request )
-*/
+    }
+
+    private void validateDigest( byte[] payload, String digest )
+    {
+        def calculatedDigest = Base64.encoder.encodeToString( DigestUtils.md5Digest( payload ) )
+        if( calculatedDigest != digest )
+        {
+            feedbackProvider.sendFeedback( PRECONDITION_FAILED, ExampleFeedbackContext.DIGEST_MISMATCH )
+            throw new PreconditionFailedError( PRECONDITION_FAILED, CustomHttpHeaders.CONTENT_MD5 )
+        }
     }
 
     /**
@@ -159,14 +169,25 @@ class RestInboundGateway extends AbstractFeedbackAware {
     }
 
     /**
-     * Extracts the MD5 digest from the HTTP headers. If not set, an error is thrown.
+     * Extracts the Base64 encoded MD5 digest from the HTTP headers. If not set, an error is thrown.
      * @param headers the headers to extract from.
-     * @return the extracted expiration minutes.
+     * @return the extracted header value.
      */
     private String extractPayloadDigest( HttpHeaders headers ) {
         def digest = headers.getFirst( CustomHttpHeaders.CONTENT_MD5 )
         if ( !digest ) { throwPreconditionFailedError( CustomHttpHeaders.CONTENT_MD5 ) }
         digest
+    }
+
+    /**
+     * Extracts the uploaded-by from the HTTP headers. If not set, an error is thrown.
+     * @param headers the headers to extract from.
+     * @return the extracted header value.
+     */
+    private String extractUploadedBy( HttpHeaders headers ) {
+        def value = headers.getFirst( CustomHttpHeaders.X_UPLOADED_BY )
+        if ( !value ) { throwPreconditionFailedError( CustomHttpHeaders.X_UPLOADED_BY ) }
+        value
     }
 
     /**
@@ -190,10 +211,6 @@ class RestInboundGateway extends AbstractFeedbackAware {
         throw new PreconditionFailedError( PRECONDITION_FAILED, missingHeaderName )
     }
 
-    private static long minutesToSeconds( int minutes ) {
-        minutes * SECONDS_IN_A_MINUTE
-    }
-
     /**
      * Wraps the id in a 201 (created) HTTP response entity to be returned to the client.
      * @param id the id to embed in the response.
@@ -201,12 +218,12 @@ class RestInboundGateway extends AbstractFeedbackAware {
      * @param contentLength the length, in bytes, of the uploaded asset.
      * @param request the servlet request being serviced.
      */
-    private static ResponseEntity<HypermediaControl> toResponseEntity( UUID id,
-                                                                  String mimeType,
-                                                                  int contentLength,
-                                                                  HttpServletRequest request ) {
+    private static ResponseEntity<HypermediaControl> toResponseEntity( String id,
+                                                                       String mimeType,
+                                                                       int contentLength,
+                                                                       HttpServletRequest request ) {
         def control = newControl( HttpStatus.CREATED, request )
-        def location = linkTo( RestInboundGateway, RestInboundGateway.getMethod( 'retrieve', UUID ), id )
+        def location = linkTo( RestInboundGateway, RestInboundGateway.getMethod( 'retrieve', String ), id )
         control.add( location.withSelfRel() )
         control.metaDataBlock = new MetaDataBlock( mimeType: mimeType, contentLength: contentLength )
         def headers = new HttpHeaders( location: location.toUri() )
@@ -220,10 +237,10 @@ class RestInboundGateway extends AbstractFeedbackAware {
      * @return the response entity containing the requested asset.
      */
     @RequestMapping( value = '/{id}', method = GET )
-    ResponseEntity<byte[]> retrieve( @PathVariable( 'id' ) final UUID id ) {
+    ResponseEntity<byte[]> retrieve( @PathVariable( 'id' ) final String id ) {
         def resource = outboundGateway.retrieve( id )
         def headers = new HttpHeaders( contentType: MediaType.parseMediaType( resource.contentType ) )
-        counterService.increment( 'example.download' )
+        counterService.increment( 'iron-caterpillar.download' )
         new ResponseEntity( resource.payload, headers, HttpStatus.OK )
     }
 
