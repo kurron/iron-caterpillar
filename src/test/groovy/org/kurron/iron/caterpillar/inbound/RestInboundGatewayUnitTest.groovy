@@ -159,22 +159,4 @@ class RestInboundGatewayUnitTest extends BaseUnitTest {
         error.code == ExampleFeedbackContext.PRECONDITION_FAILED.code
         error.message.contains( 'Content-Type' )
     }
-
-    def 'exercise missing expiration minutes header'() {
-
-        given: 'a request with no content type header set'
-        def requestBuilder = MockMvcRequestBuilders.post( '/' )
-                .contentType( redisResource.contentType )
-                .header( 'Content-Length', 128 )
-                .content( redisResource.payload )
-
-        when: 'the POST request is made'
-        mockMvc.perform( requestBuilder ).andReturn()
-
-        then: 'the expected error is thrown'
-        def wrappedError = thrown( NestedServletException )
-        def error = wrappedError.cause as PreconditionFailedError
-        error.code == ExampleFeedbackContext.PRECONDITION_FAILED.code
-        error.message.contains( CustomHttpHeaders.X_EXPIRATION_MINUTES )
-    }
 }

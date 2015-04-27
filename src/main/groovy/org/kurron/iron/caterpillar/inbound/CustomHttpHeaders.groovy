@@ -31,11 +31,6 @@ class CustomHttpHeaders {
     static final String X_CORRELATION_ID = 'X-Correlation-Id'
 
     /**
-     * The number of minutes to wait before expiring a given resource.
-     */
-    static final String X_EXPIRATION_MINUTES = 'X-Expiration-Minutes'
-
-    /**
      * The identifier of the entity uploading the BLOB.
      */
     static final String X_UPLOADED_BY = 'X-Uploaded-By'

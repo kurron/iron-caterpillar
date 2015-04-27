@@ -161,11 +161,7 @@ class TestSteps {
 
     @Given( '^an X-Expiration-Minutes header filled in with the number of minutes the asset should be available$' )
     void 'an X-Expiration-Minutes header filled in with the number of minutes the asset should be available'() {
-        specifyExpiration()
-    }
-
-    private specifyExpiration( int minutes = 1 ) {
-        sharedState.headers.set( CustomHttpHeaders.X_EXPIRATION_MINUTES, minutes.toString() )
+        throw new UnsupportedOperationException( 'no longer required' )
     }
 
     @Given( '^a Content-Length header filled in with the size, in bytes, of the asset being uploaded$' )

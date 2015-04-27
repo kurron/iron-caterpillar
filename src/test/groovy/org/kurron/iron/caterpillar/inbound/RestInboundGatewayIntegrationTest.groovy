@@ -40,7 +40,6 @@ class RestInboundGatewayIntegrationTest extends BaseInboundIntegrationTest {
         and: 'required headers are set'
         def headers = buildHeaders()
         headers.setContentType( MediaType.IMAGE_GIF )
-        headers.set( CustomHttpHeaders.X_EXPIRATION_MINUTES, 5.toString() )
         def requestEntity = new HttpEntity( payload, headers )
 
         when: 'the payload is stored'
