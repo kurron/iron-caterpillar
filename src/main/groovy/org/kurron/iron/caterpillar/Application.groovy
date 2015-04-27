@@ -17,8 +17,6 @@ package org.kurron.iron.caterpillar
 
 import groovy.util.logging.Slf4j
 import org.kurron.feedback.FeedbackAwareBeanPostProcessor
-import org.kurron.iron.caterpillar.outbound.BinaryAsset
-import org.kurron.iron.caterpillar.outbound.BinaryAssetRedisSerializer
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -27,7 +25,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.core.StringRedisTemplate
-import org.springframework.data.redis.serializer.StringRedisSerializer
 
 /**
  * This is the main entry into the application. Running from the command-line using embedded Tomcat will invoke
