@@ -159,11 +159,6 @@ class TestSteps {
         sharedState.headers.setContentType( sharedState.mediaType )
     }
 
-    @Given( '^an X-Expiration-Minutes header filled in with the number of minutes the asset should be available$' )
-    void 'an X-Expiration-Minutes header filled in with the number of minutes the asset should be available'() {
-        throw new UnsupportedOperationException( 'no longer required' )
-    }
-
     @Given( '^a Content-Length header filled in with the size, in bytes, of the asset being uploaded$' )
     @SuppressWarnings( 'EmptyMethod' )
     void 'a Content-Length header filled in with the size, in bytes, of the asset being uploaded'() {
@@ -172,8 +167,6 @@ class TestSteps {
 
     @Given( '^an Accept header filled in with the desired media-type of the returned hypermedia control$' )
     void 'an Accept header filled in with the desired media-type of the returned hypermedia control'() {
-        // there is a ticket to deal with versions so, presumably, we will also be required to send
-        // some options, eg type=custom-control;version=1.2.3
         specifyAcceptType()
     }
 
@@ -189,7 +182,7 @@ class TestSteps {
 
     @Given( '^a Content-MD(\\d+) header filled in with the digest of the asset being uploaded$' )
     void '^a Content-MD5 header filled in with the digest of the asset being uploaded$'( int ignored ) {
-        sharedState.digest = DigestUtils.md5DigestAsHex( sharedState.bytes )
+        sharedState.digest = Base64.encoder.encodeToString( DigestUtils.md5Digest( sharedState.bytes ) )
         sharedState.headers.set( CustomHttpHeaders.CONTENT_MD5, sharedState.digest )
     }
 
