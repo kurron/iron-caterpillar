@@ -170,6 +170,11 @@ class TestSteps {
         specifyAcceptType()
     }
 
+    @Given( '^an Accept header containing an unsupported media-type$' )
+    void 'an Accept header containing an unsupported media-type'() {
+        specifyAcceptType( [MediaType.parseMediaType( 'unsupported/unsupported' )] )
+    }
+
     private specifyAcceptType( List<MediaType> acceptable = [MediaType.APPLICATION_JSON] ) {
         sharedState.headers.setAccept( acceptable )
     }

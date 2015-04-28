@@ -38,7 +38,8 @@ Feature: Upload An Asset
     Then a response with a 413 HTTP status code is returned
     And the hypermedia control describing the size problem is returned
 
-  @sad
+  @happy
+  @slow
   Scenario: Asset Already Exists
     Given an asset has previously been uploaded
     When a POST request is made with the previously uploaded asset in the body
