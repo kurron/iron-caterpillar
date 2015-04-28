@@ -8,6 +8,7 @@ Feature: Download An Asset
     And each request contains an X-Correlation-Id header filled in with a unique value
 
   @happy
+  @slow
   Scenario: Successful Download
     Given an Accept header filled in with the media-type of the asset
     And a GET request is made to the URI
@@ -16,6 +17,7 @@ Feature: Download An Asset
     And the body contains the asset
 
   @happy
+  @slow
   Scenario: Meta-data Download
     Given an Accept header filled in with the media-type of the hypermedia control
     When a GET request is made to the URI
@@ -23,6 +25,7 @@ Feature: Download An Asset
     And the hypermedia control describing the asset is returned
 
   @sad
+  @slow
   Scenario: Unknown URI
     Given an Accept header filled in with the media-type of the asset and the media-type of the hypermedia control
     And a URI that does not match anything in the system

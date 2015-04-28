@@ -16,6 +16,7 @@
 package org.kurron.iron.caterpillar.inbound
 
 import static org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext.CONTENT_LENGTH_REQUIRED
+import static org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext.DIGEST_MISMATCH
 import static org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext.PAYLOAD_TOO_LARGE
 import static org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext.PRECONDITION_FAILED
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
@@ -23,6 +24,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET
 import static org.springframework.web.bind.annotation.RequestMethod.POST
 import org.kurron.feedback.AbstractFeedbackAware
 import org.kurron.feedback.exceptions.LengthRequiredError
+import org.kurron.feedback.exceptions.MismatchedDigestError
 import org.kurron.feedback.exceptions.PayloadTooLargeError
 import org.kurron.feedback.exceptions.PreconditionFailedError
 import org.kurron.iron.caterpillar.ApplicationProperties
@@ -137,10 +139,9 @@ class RestInboundGateway extends AbstractFeedbackAware {
     private void validateDigest( byte[] payload, String digest )
     {
         def calculatedDigest = Base64.encoder.encodeToString( DigestUtils.md5Digest( payload ) )
-        if( calculatedDigest != digest )
-        {
-            feedbackProvider.sendFeedback( PRECONDITION_FAILED, ExampleFeedbackContext.DIGEST_MISMATCH )
-            throw new PreconditionFailedError( PRECONDITION_FAILED, CustomHttpHeaders.CONTENT_MD5 )
+        if( calculatedDigest != digest ) {
+            feedbackProvider.sendFeedback( DIGEST_MISMATCH, digest, calculatedDigest )
+            throw new MismatchedDigestError( DIGEST_MISMATCH, digest, calculatedDigest )
         }
     }
 

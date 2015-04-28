@@ -175,14 +175,20 @@ class TestSteps {
     }
 
     @Given( '^an X-Uploaded-By header filled in with a unique identifier of the entity uploading the asset$' )
-    void '^an X-Uploaded-By header filled in with a unique identifier of the entity uploading the asset$'() {
+    void 'an X-Uploaded-By header filled in with a unique identifier of the entity uploading the asset'() {
         sharedState.headers.set( CustomHttpHeaders.X_UPLOADED_BY, 'acceptance tester' )
 
     }
 
     @Given( '^a Content-MD(\\d+) header filled in with the digest of the asset being uploaded$' )
-    void '^a Content-MD5 header filled in with the digest of the asset being uploaded$'( int ignored ) {
+    void 'a Content-MD5 header filled in with the digest of the asset being uploaded'( int ignored ) {
         sharedState.digest = Base64.encoder.encodeToString( DigestUtils.md5Digest( sharedState.bytes ) )
+        sharedState.headers.set( CustomHttpHeaders.CONTENT_MD5, sharedState.digest )
+    }
+
+    @Given( '^a Content-MD(\\d+) header filled in with a digest of a different asset$' )
+    void 'a Content-MD5 header filled in with a digest of a different asset'( int ignored ) {
+        sharedState.digest = Base64.encoder.encodeToString( DigestUtils.md5Digest( randomByteArray( 8 ) ) )
         sharedState.headers.set( CustomHttpHeaders.CONTENT_MD5, sharedState.digest )
     }
 
@@ -199,7 +205,7 @@ class TestSteps {
 
     @Given( '^an Accept header filled in with the desired media-type of the bits to be downloaded$' )
     void 'an Accept header filled in with the desired media-type of the bits to be downloaded'() {
-        specifyAcceptType( sharedState.mediaType )
+        specifyAcceptType( [sharedState.mediaType] )
     }
 
     @Given( '^an asset has previously been uploaded$' )
@@ -207,7 +213,6 @@ class TestSteps {
         // reusing steps to upload bytes is too difficult to properly manage so we invoke the steps here
         sharedState.headers = new HttpHeaders() // clear out any prior steps' headers
         specifyCorrelationID()
-        specifyExpiration()
         sharedState.mediaType = generateMediaType()
         specifyContentType()
         specifyAcceptType()
@@ -247,7 +252,7 @@ class TestSteps {
     }
 
     @When( '^a GET request is made to the URI$' )
-    void '^a GET request is made to the URI$'() {
+    void 'a GET request is made to the URI'() {
         def requestEntity = new HttpEntity( new byte[0], sharedState.headers )
 
         sharedState.downloadEntity = sharedState.internet.exchange( sharedState.location, HttpMethod.GET, requestEntity, byte[] )
@@ -304,5 +309,14 @@ class TestSteps {
         assert control.errorBlock.code
         assert control.errorBlock.message
         assert control.errorBlock.developerMessage
+    }
+
+
+    @Then( '^the hypermedia control describing the precondition failure is returned$' )
+    void 'the hypermedia control describing the precondition failure is returned'() {
+        assert sharedState.uploadEntity.headers.getContentType().isCompatibleWith( HypermediaControl.MEDIA_TYPE )
+        assert sharedState.uploadEntity.body.errorBlock.code
+        assert sharedState.uploadEntity.body.errorBlock.message
+        assert sharedState.uploadEntity.body.errorBlock.developerMessage
     }
 }

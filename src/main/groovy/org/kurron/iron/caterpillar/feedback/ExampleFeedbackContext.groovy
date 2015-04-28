@@ -37,7 +37,7 @@ enum ExampleFeedbackContext implements FeedbackContext {
     CONTENT_LENGTH_REQUIRED( 2005, 'The Content-Length was not set and is required', ERROR, QA ),
     PAYLOAD_TOO_LARGE( 2006, 'The payload size of {} Bytes exceeds the maximum permitted size of {} Megabytes', ERROR, QA ),
     MISSING_CORRELATION_ID( 2007, 'A correlation id was missing from a request, and an auto-generated id of {} will be used instead', FeedbackLevel.WARN, QA ),
-    DIGEST_MISMATCH( 2008, 'The provided MD5 value of {} does not match the calculates value of {}', FeedbackLevel.WARN, QA )
+    DIGEST_MISMATCH( 2008, 'The provided MD5 value of {} does not match the calculated value of {}', FeedbackLevel.WARN, QA )
 
     /**
      * Unique context code for this instance.
