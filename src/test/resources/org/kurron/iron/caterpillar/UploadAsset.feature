@@ -12,6 +12,7 @@ Feature: Upload An Asset
     And a Content-MD5 header filled in with the digest of the asset being uploaded
 
   @happy
+  @slow
   Scenario: Successful Upload
     Given an asset to be uploaded
     When a POST request is made with the asset in the body
@@ -21,6 +22,7 @@ Feature: Upload An Asset
     And the hypermedia control contains the meta-data of the uploaded asset
 
   @sad
+  @slow
   Scenario: Digest Does Not Match
     Given an asset to be uploaded
     And a Content-MD5 header filled in with a digest of a different asset
@@ -29,6 +31,7 @@ Feature: Upload An Asset
     And the hypermedia control describing the precondition failure is returned
 
   @sad
+  @slow
   Scenario: Asset Too Large
     Given an asset that is too large
     When a POST request is made with the asset in the body
@@ -39,7 +42,9 @@ Feature: Upload An Asset
   Scenario: Asset Already Exists
     Given an asset has previously been uploaded
     When a POST request is made with the previously uploaded asset in the body
-    Then a response with a 200 HTTP status code is returned
+    Then a response with a 201 HTTP status code is returned
+    And the Location header contains the URI of the uploaded asset
+    And the hypermedia control contains the URI of the uploaded asset
     And the hypermedia control contains the meta-data of the uploaded asset
 
   @sad

@@ -176,12 +176,18 @@ class TestSteps {
 
     @Given( '^an X-Uploaded-By header filled in with a unique identifier of the entity uploading the asset$' )
     void 'an X-Uploaded-By header filled in with a unique identifier of the entity uploading the asset'() {
-        sharedState.headers.set( CustomHttpHeaders.X_UPLOADED_BY, 'acceptance tester' )
+        specifyUploadedBy()
+    }
 
+    private specifyUploadedBy()  {
+        sharedState.headers.set( CustomHttpHeaders.X_UPLOADED_BY, 'acceptance tester' )
     }
 
     @Given( '^a Content-MD(\\d+) header filled in with the digest of the asset being uploaded$' )
     void 'a Content-MD5 header filled in with the digest of the asset being uploaded'( int ignored ) {
+        specifyContentMd5()    }
+
+    private specifyContentMd5()  {
         sharedState.digest = Base64.encoder.encodeToString( DigestUtils.md5Digest( sharedState.bytes ) )
         sharedState.headers.set( CustomHttpHeaders.CONTENT_MD5, sharedState.digest )
     }
@@ -216,6 +222,8 @@ class TestSteps {
         sharedState.mediaType = generateMediaType()
         specifyContentType()
         specifyAcceptType()
+        specifyContentMd5()
+        specifyUploadedBy()
         def requestEntity = new HttpEntity( sharedState.bytes, sharedState.headers )
         sharedState.location = sharedState.internet.postForLocation( sharedState.uri, requestEntity )
         sharedState.headers = new HttpHeaders() // reset for the remaining steps
@@ -251,10 +259,23 @@ class TestSteps {
         sharedState.statusCode = sharedState.uploadEntity.statusCode
     }
 
+    @When( '^a POST request is made with the previously uploaded asset in the body$' )
+    void '^a POST request is made with the previously uploaded asset in the body$'() {
+        // reusing steps to upload bytes is too difficult to properly manage so we invoke the steps here
+        sharedState.headers = new HttpHeaders() // clear out any prior steps' headers
+        specifyCorrelationID()
+        specifyContentType()
+        specifyAcceptType()
+        specifyContentMd5()
+        specifyUploadedBy()
+        def requestEntity = new HttpEntity( sharedState.bytes, sharedState.headers )
+        sharedState.uploadEntity = sharedState.internet.postForEntity( sharedState.uri, requestEntity, HypermediaControl )
+        sharedState.statusCode = sharedState.uploadEntity.statusCode
+    }
+
     @When( '^a GET request is made to the URI$' )
     void 'a GET request is made to the URI'() {
         def requestEntity = new HttpEntity( new byte[0], sharedState.headers )
-
         sharedState.downloadEntity = sharedState.internet.exchange( sharedState.location, HttpMethod.GET, requestEntity, byte[] )
         sharedState.statusCode = sharedState.downloadEntity.statusCode
     }

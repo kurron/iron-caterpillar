@@ -20,6 +20,7 @@ import static org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext.REDIS_
 import static org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext.REDIS_STORE_INFO
 import org.kurron.feedback.AbstractFeedbackAware
 import org.kurron.feedback.exceptions.NotFoundError
+import org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext
 import org.kurron.stereotype.OutboundGateway
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisOperations
@@ -63,15 +64,17 @@ class RedisOutboundGateway extends AbstractFeedbackAware implements PersistenceO
     @Override
     String store( final BinaryAsset asset ) {
         feedbackProvider.sendFeedback( REDIS_STORE_INFO, asset.size, asset.contentType, asset.uploadedBy, asset.md5 )
-        Map<String,String> data = [(CONTENT_TYPE_KEY): asset.contentType,
-                                   (UPLOADED_BY_KEY): asset.uploadedBy,
-                                   (SIZE_KEY): Integer.toString( asset.size ),
-                                   (PAYLOAD_KEY): Base64.encoder.encodeToString( asset.payload ) ]
 
         if ( redisOperations.opsForHash().keys( asset.md5 ) ) {
-            throw new UnsupportedOperationException( 'TODO: throw a custom exception' )
+            feedbackProvider.sendFeedback( ExampleFeedbackContext.DUPLICATE_UPLOAD, asset.md5 )
         }
-        redisOperations.opsForHash().putAll( asset.md5, data )
+        else {
+            Map<String,String> data = [(CONTENT_TYPE_KEY): asset.contentType,
+                                       (UPLOADED_BY_KEY): asset.uploadedBy,
+                                       (SIZE_KEY): Integer.toString( asset.size ),
+                                       (PAYLOAD_KEY): Base64.encoder.encodeToString( asset.payload ) ]
+            redisOperations.opsForHash().putAll( asset.md5, data )
+        }
         asset.md5
     }
 
