@@ -117,7 +117,9 @@ the control will contain information that describes the problem. The control wil
 For example, a request that attempts to fetch a non-existent asset will produce a
 `400 Bad Request` response:
 
-include::{generated}/failure-scenario/response.asciidoc[]
+include::{generated}/failure-scenario/curl-request.adoc[]
+include::{generated}/failure-scenario/http-request.adoc[]
+include::{generated}/failure-scenario/http-response.adoc[]
 
 [[overview-hypermedia]]
 == Hypermedia
@@ -159,7 +161,9 @@ always begin a session with API discovery to obtain the currently supported URIs
 
 ==== Example Conversation
 
-include::{generated}/api-discovery/request-response.asciidoc[]
+include::{generated}/api-discovery/curl-request.adoc[]
+include::{generated}/api-discovery/http-request.adoc[]
+include::{generated}/api-discovery/http-response.adoc[]
 
 [[asset-upload]]
 === Uploading the asset
@@ -178,7 +182,9 @@ describing the successful operation as well as other resources that can be acces
 
 ==== Example Conversation
 
-include::{generated}/asset-storage/request-response.asciidoc[]
+include::{generated}/asset-storage/curl-request.adoc[]
+include::{generated}/asset-storage/http-request.adoc[]
+include::{generated}/asset-storage/http-response.adoc[]
 
 [[asset-download]]
 === Downloading the asset
@@ -191,7 +197,9 @@ returned instead of the asset.
 
 ==== Example Conversation
 
-include::{generated}/asset-download/request-response.asciidoc[]
+include::{generated}/asset-download/curl-request.adoc[]
+include::{generated}/asset-download/http-request.adoc[]
+include::{generated}/asset-download/http-response.adoc[]
 
 [[current-limitations]]
 === Current Limitations
