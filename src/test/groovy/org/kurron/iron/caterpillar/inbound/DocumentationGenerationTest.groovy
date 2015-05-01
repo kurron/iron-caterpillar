@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.util.DigestUtils
 import org.springframework.web.context.WebApplicationContext
 import org.kurron.iron.caterpillar.BaseOutboundIntegrationTest
 
@@ -46,7 +47,7 @@ class DocumentationGenerationTest extends BaseOutboundIntegrationTest {
 
         given: 'a valid request'
         def requestBuilder = get( '/' ).accept( HypermediaControl.MIME_TYPE )
-                                       .header( CustomHttpHeaders.X_CORRELATION_ID, '155887a0-8959-4031-a30a-a8e52bc6b7d8' )
+                                       .header( CustomHttpHeaders.X_CORRELATION_ID, randomUUID().toString() )
 
         when: 'the GET request is made'
         mockMvc.perform( requestBuilder ).andExpect( status().isOk() ).andDo( document( 'api-discovery' ) )
@@ -58,7 +59,7 @@ class DocumentationGenerationTest extends BaseOutboundIntegrationTest {
 
         given: 'a valid request'
         def requestBuilder = get( '/{id}', randomUUID() ).accept( 'image/png;width=1024;height=768', HypermediaControl.MIME_TYPE )
-                                                         .header( CustomHttpHeaders.X_CORRELATION_ID, '155887a0-8959-4031-a30a-a8e52bc6b7d8' )
+                                                         .header( CustomHttpHeaders.X_CORRELATION_ID, randomUUID().toString() )
 
         when: 'the GET request is made'
         mockMvc.perform( requestBuilder ).andExpect( status().isNotFound() ).andDo( document( 'failure-scenario' ) )
@@ -69,13 +70,14 @@ class DocumentationGenerationTest extends BaseOutboundIntegrationTest {
     def 'demonstrate asset storage'() {
 
         given: 'a valid request'
-        def buffer = 'some image bytes'.bytes
+        def buffer = randomByteArray( 32 )
         def requestBuilder = post( '/' ).content( buffer )
                 .contentType( 'image/png;width=1024;height=768' )
                 .accept( HypermediaControl.MIME_TYPE )
                 .header( 'Content-Length', buffer.size() )
-                .header( CustomHttpHeaders.X_EXPIRATION_MINUTES, 10 )
-                .header( CustomHttpHeaders.X_CORRELATION_ID, '155887a0-8959-4031-a30a-a8e52bc6b7d8' )
+                .header( CustomHttpHeaders.X_UPLOADED_BY, 'transcoding-service' )
+                .header( CustomHttpHeaders.CONTENT_MD5, Base64.encoder.encodeToString( DigestUtils.md5Digest( buffer ) ) )
+                .header( CustomHttpHeaders.X_CORRELATION_ID, randomUUID().toString() )
 
         when: 'the POST request is made'
         mockMvc.perform( requestBuilder ).andExpect( status().isCreated() ).andDo( document( 'asset-storage' ) )
@@ -86,18 +88,20 @@ class DocumentationGenerationTest extends BaseOutboundIntegrationTest {
     def 'demonstrate asset retrieval'() {
 
         given: 'a previously uploaded asset'
-        def buffer = 'some image bytes'.bytes
+        def buffer = randomByteArray( 32 )
         def uploadBuilder = post( '/' ).content( buffer )
                 .contentType( 'image/png;width=1024;height=768' )
                 .accept( HypermediaControl.MIME_TYPE )
                 .header( 'Content-Length', buffer.size() )
-                .header( CustomHttpHeaders.X_CORRELATION_ID, '155887a0-8959-4031-a30a-a8e52bc6b7d8' )
+                .header( CustomHttpHeaders.CONTENT_MD5, Base64.encoder.encodeToString( DigestUtils.md5Digest( buffer ) ) )
+                .header( CustomHttpHeaders.X_UPLOADED_BY, 'transcoding-service' )
+                .header( CustomHttpHeaders.X_CORRELATION_ID, randomUUID().toString() )
         def upload = mockMvc.perform( uploadBuilder ).andExpect( status().isCreated() ).andReturn()
 
         when: 'the GET request is made'
         def downloadBuilder = get( upload.response.getHeaderValue( 'Location' ) as String )
                 .accept( 'image/png', 'application/json' )
-                .header( CustomHttpHeaders.X_CORRELATION_ID, '00588700-8959-4031-a30a-a8e52bc6b7d8' )
+                .header( CustomHttpHeaders.X_CORRELATION_ID, randomUUID().toString() )
         mockMvc.perform( downloadBuilder ).andExpect( status().isOk(  ) ).andDo( document( 'asset-download' ) )
 
         then: 'examples are generated'
