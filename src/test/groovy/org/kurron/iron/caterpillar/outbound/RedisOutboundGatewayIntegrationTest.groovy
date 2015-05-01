@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * Integration-level testing of the RedisOutboundGateway object.
  */
-class RedisOutboundGatewayComponentTest extends BaseOutboundIntegrationTest {
+class RedisOutboundGatewayIntegrationTest extends BaseOutboundIntegrationTest {
 
     @Autowired
     PersistenceOutboundGateway sut
