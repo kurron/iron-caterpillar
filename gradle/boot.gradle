@@ -31,7 +31,9 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-redis:${springBootVersion}"
     compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     compile "org.springframework.boot:spring-boot-starter-hateoas:${springBootVersion}"
-    compile "org.springframework.boot:spring-boot-starter-remote-shell:${springBootVersion}"
+    compile ( "org.springframework.boot:spring-boot-starter-remote-shell:${springBootVersion}" ) {
+        exclude module: 'groovy'
+    }
     compile "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
 
     testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"

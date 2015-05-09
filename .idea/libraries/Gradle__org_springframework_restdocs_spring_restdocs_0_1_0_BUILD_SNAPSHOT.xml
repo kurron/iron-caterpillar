@@ -1,11 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: org.springframework.restdocs:spring-restdocs:0.1.0.BUILD-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.restdocs/spring-restdocs/0.1.0.BUILD-SNAPSHOT/f50aee01fedb380de521d6d02815ee27d9874089/spring-restdocs-0.1.0.BUILD-SNAPSHOT.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.restdocs/spring-restdocs/0.1.0.BUILD-SNAPSHOT/182afd1d14731a2ea1bf705da41336468d997537/spring-restdocs-0.1.0.BUILD-SNAPSHOT.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.restdocs/spring-restdocs/0.1.0.BUILD-SNAPSHOT/f04eb16d23de685f882bdf32abbda53132b2f118/spring-restdocs-0.1.0.BUILD-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.restdocs/spring-restdocs/0.1.0.BUILD-SNAPSHOT/fbac7bae96ebb54518421600fca89c68101804fd/spring-restdocs-0.1.0.BUILD-SNAPSHOT-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
