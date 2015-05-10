@@ -18,6 +18,7 @@ package org.kurron.iron.caterpillar.inbound
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.Canonical
+import groovy.transform.Immutable
 import org.springframework.hateoas.ResourceSupport
 import org.springframework.http.MediaType
 
@@ -25,7 +26,7 @@ import org.springframework.http.MediaType
  * The hypermedia REST control for the BLOB resource.  Can be serialized into
  * both JSON and XML.
  */
-@Canonical
+@Immutable
 @JsonInclude( JsonInclude.Include.NON_NULL )
 class HypermediaControl extends ResourceSupport {
 

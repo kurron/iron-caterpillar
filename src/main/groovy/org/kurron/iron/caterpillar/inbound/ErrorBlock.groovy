@@ -17,11 +17,12 @@ package org.kurron.iron.caterpillar.inbound
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.Canonical
+import groovy.transform.Immutable
 
 /**
  * Optional error section of the control.
  */
-@Canonical
+@Immutable
 class ErrorBlock {
 
     /**

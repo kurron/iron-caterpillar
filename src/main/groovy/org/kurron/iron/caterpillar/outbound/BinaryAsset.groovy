@@ -15,14 +15,13 @@
  */
 package org.kurron.iron.caterpillar.outbound
 
-import groovy.transform.Canonical
+import groovy.transform.Immutable
 
 /**
  * Represents a resource that is saved to BLOB storage.
  */
-@Canonical
-class BinaryAsset
-{
+@Immutable
+class BinaryAsset {
 
     /**
      * The content type associated with the resource.
