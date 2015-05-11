@@ -59,10 +59,10 @@ class GlobalExceptionHandler extends ResponseEntityExceptionHandler implements F
                                                                     HttpStatus status,
                                                                     WebRequest request ) {
         sendFeedback( GENERIC_ERROR, e.message )
-        def control = new HypermediaControl( httpCode: status.value() )
-        control.errorBlock = new ErrorBlock( code: GENERIC_ERROR.code,
-                                             message: e.message,
-                                             developerMessage: 'Indicates that the exception was not handled explicitly and is being handled as a generic error' )
+        def errorBlock = new ErrorBlock( code: GENERIC_ERROR.code,
+                                         message: e.message,
+                                         developerMessage: 'Indicates that the exception was not handled explicitly and is being handled as a generic error' )
+        def control = new HypermediaControl( httpCode: status.value(), errorBlock: errorBlock )
         wrapInResponseEntity( control, status, headers )
     }
 
@@ -73,10 +73,8 @@ class GlobalExceptionHandler extends ResponseEntityExceptionHandler implements F
      */
     @ExceptionHandler( AbstractError )
     static ResponseEntity<HypermediaControl> handleApplicationException( AbstractError e ) {
-        def control = new HypermediaControl( httpCode: e.httpStatus.value() ).with {
-            errorBlock = new ErrorBlock( code: e.code, message: e.message, developerMessage: e.developerMessage )
-            it
-        }
+        def errorBlock = new ErrorBlock( code: e.code, message: e.message, developerMessage: e.developerMessage )
+        def control = new HypermediaControl( httpCode: e.httpStatus.value(), errorBlock: errorBlock )
         wrapInResponseEntity( control, e.httpStatus )
     }
 
