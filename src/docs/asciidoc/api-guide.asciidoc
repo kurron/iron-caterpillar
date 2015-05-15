@@ -30,10 +30,10 @@ use of HTTP verbs.
 | Used to retrieve a resource
 
 | `POST`
-| Used to create a new resource
+| Not currently supported
 
 | `PUT`
-| Used to update the meta-data of an existing resource
+|  Used to create a new resource
 
 | `PATCH`
 | Not currently supported
@@ -100,8 +100,8 @@ The system is HTTP cache-friendly and most replies will contain headers that wil
 | Header | Usage
 
 | `ETag`
-| When the asset is initially `POST`ed into the system the `ETag` header will be filled in with an opaque value that
-the client can use to conditionlly `GET` the asset and save some network bandwidth.  Since the uploaded assets are immutable, the `ETag` will
+| When the asset is initially `PUT` into the system the `ETag` header will be filled in with an opaque value that
+the client can use to conditionally `GET` the asset and save some network bandwidth.  Since the uploaded assets are immutable, the `ETag` will
 never change.
 |===
 
@@ -148,8 +148,8 @@ result in errors as service location and URIs change.
 [[overview-miscellaneous]]
 == Miscellaneous
 
-The application does not currently require any form of authentication, expecting that the service will not be
-exposed directly to the public internet.  The application does not currently rate limit requests, expecting that
+The service does not currently require any form of authentication, expecting that the service will not be
+exposed directly to the public internet.  The service does not currently rate limit requests, expecting that
 API users will be prudent in their use of the service.
 
 [[resources]]
@@ -181,12 +181,13 @@ include::{generated}/api-discovery/http-response.adoc[]
 [[asset-upload]]
 === Uploading the asset
 
-A `POST` request is used to upload the asset.  The `Content-Type` header is used to communicate
+A `PUT` request is used to upload the asset.  The `Content-Type` header is used to communicate
 both the asset's actual type and additional meta-data.  The application adheres to the https://tools.ietf.org/html/rfc2045[RFC 2045]
 standard and makes use of MIME type parameters to communicate additional information.  Example usages include
 specifying an image's height and width or an audio file's sample rate.  The response will contain the hypermedia control
 describing the successful operation as well as other resources that can be accessed. Since IC is an immutable store, in the case of a
-partial failure it is safe and expected to retry the `POST`.  If the asset already exists in the system, no conflict will flagged.
+partial failure it is safe and expected to retry the `PUT`.  If the asset already exists in the system, no change will occur and the call
+will succeed.
 
 |===
 | Notable Header | Usage
