@@ -22,15 +22,16 @@ import static org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext.PRECON
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
 import static org.springframework.web.bind.annotation.RequestMethod.GET
 import static org.springframework.web.bind.annotation.RequestMethod.POST
+import javax.servlet.http.HttpServletRequest
 import org.kurron.feedback.AbstractFeedbackAware
 import org.kurron.feedback.exceptions.LengthRequiredError
 import org.kurron.feedback.exceptions.MismatchedDigestError
 import org.kurron.feedback.exceptions.PayloadTooLargeError
 import org.kurron.feedback.exceptions.PreconditionFailedError
 import org.kurron.iron.caterpillar.ApplicationProperties
-import javax.servlet.http.HttpServletRequest
-import org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext
 import org.kurron.iron.caterpillar.outbound.BinaryAsset
+import org.kurron.iron.caterpillar.outbound.PersistenceOutboundGateway
+import org.kurron.stereotype.InboundRestGateway
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.actuate.metrics.CounterService
 import org.springframework.boot.actuate.metrics.GaugeService
@@ -45,8 +46,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import org.kurron.iron.caterpillar.outbound.PersistenceOutboundGateway
-import org.kurron.stereotype.InboundRestGateway
 
 /**
  * Handles inbound REST requests.
@@ -136,10 +135,9 @@ class RestInboundGateway extends AbstractFeedbackAware {
         toResponseEntity( id, contentType.toString(), payload.length, request )
     }
 
-    private void validateDigest( byte[] payload, String digest )
-    {
+    private void validateDigest( byte[] payload, String digest ) {
         def calculatedDigest = Base64.encoder.encodeToString( DigestUtils.md5Digest( payload ) )
-        if( calculatedDigest != digest ) {
+        if ( calculatedDigest != digest ) {
             feedbackProvider.sendFeedback( DIGEST_MISMATCH, digest, calculatedDigest )
             throw new MismatchedDigestError( DIGEST_MISMATCH, digest, calculatedDigest )
         }

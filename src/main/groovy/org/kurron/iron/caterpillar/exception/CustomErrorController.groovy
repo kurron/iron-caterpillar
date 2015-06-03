@@ -80,14 +80,14 @@ class CustomErrorController extends AbstractFeedbackAware implements ErrorContro
     ResponseEntity<HypermediaControl> handleException( HttpServletRequest request ) {
         Map<String, Object> attributes = errorAttributes.getErrorAttributes( new ServletRequestAttributes( request ), false )
         def status = getStatus( request )
-        def control = new HypermediaControl( status.value() )
         String path = attributes.getOrDefault( 'path', 'unknown' )
         String message = attributes.getOrDefault( 'message', 'unknown' )
         String error = attributes.getOrDefault( 'error', 'unknown' )
         feedbackProvider.sendFeedback( GENERIC_ERROR, error )
-        control.errorBlock = new ErrorBlock( code: GENERIC_ERROR.code,
-                                             message: error,
-                                             developerMessage: "Failure for path ${path}. ${message}"  )
+        def errorBlock = new ErrorBlock( code: GENERIC_ERROR.code,
+                                         message: error,
+                                         developerMessage: "Failure for path ${path}. ${message}"  )
+        def control = new HypermediaControl( code: status.value(), errorBlock: errorBlock )
         new ResponseEntity<HypermediaControl>( control, status )
     }
 

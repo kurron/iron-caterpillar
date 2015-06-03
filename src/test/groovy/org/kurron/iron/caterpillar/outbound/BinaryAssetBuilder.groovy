@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.kurron.iron.caterpillar.outbound
 
 import org.kurron.iron.caterpillar.Builder
@@ -29,15 +28,16 @@ class BinaryAssetBuilder extends Builder<BinaryAsset> {
     /**
      * Random data generator.
      **/
-    private static final Randomizer theRandomizer = new Randomizer()
+    private static final Randomizer GENERATOR = new Randomizer()
 
+    @SuppressWarnings( 'LineLength' )
     @Override
     BinaryAsset build() {
         new BinaryAsset().with {
-            def mediaType = MediaType.parseMediaType( "${theRandomizer.randomHexString()}/${theRandomizer.randomHexString()};${theRandomizer.randomHexString()}=${theRandomizer.randomHexString()}" )
+            def mediaType = MediaType.parseMediaType( "${GENERATOR.randomHexString()}/${GENERATOR.randomHexString()};${GENERATOR.randomHexString()}=${GENERATOR.randomHexString()}" )
             contentType = mediaType.toString()
-            uploadedBy = theRandomizer.randomHexString()
-            payload = theRandomizer.randomByteArray( 32 )
+            uploadedBy = GENERATOR.randomHexString()
+            payload = GENERATOR.randomByteArray( 32 )
             size = payload.size()
             md5 = Base64.encoder.encodeToString( DigestUtils.md5Digest( payload ) )
             it

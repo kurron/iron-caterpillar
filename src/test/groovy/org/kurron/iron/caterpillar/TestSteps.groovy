@@ -27,7 +27,6 @@ import org.kurron.iron.caterpillar.inbound.CustomHttpHeaders
 import org.kurron.iron.caterpillar.inbound.HypermediaControl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.SpringApplicationContextLoader
-import org.springframework.boot.test.WebIntegrationTest
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -44,13 +43,9 @@ import org.springframework.web.util.UriComponentsBuilder
  * by Cucumber unless special care is taken. If you word your features in a consistent manner, then
  * steps will automatically get reused and you won't have to keep writing the same test code.
  **/
-//@ContextConfiguration( classes = [AcceptanceTestConfiguration], loader = SpringApplicationContextLoader )
-
-@ContextConfiguration( loader = SpringApplicationContextLoader, classes = [Application, InboundIntegrationTestConfiguration] )
-@WebIntegrationTest( randomPort = true )
-
+@ContextConfiguration( classes = [AcceptanceTestConfiguration], loader = SpringApplicationContextLoader )
 @Slf4j
-@SuppressWarnings( ['GrMethodMayBeStatic', 'GStringExpressionWithinString'] )
+@SuppressWarnings( ['GrMethodMayBeStatic', 'GStringExpressionWithinString', 'MethodCount' ] )
 class TestSteps {
 
     /**
@@ -188,8 +183,8 @@ class TestSteps {
         sharedState.headers.set( CustomHttpHeaders.X_UPLOADED_BY, 'acceptance tester' )
     }
 
-    @Given( '^a Content-MD(\\d+) header filled in with the digest of the asset being uploaded$' )
-    void 'a Content-MD5 header filled in with the digest of the asset being uploaded'( int ignored ) {
+    @Given( '^a Content-MD5 header filled in with the digest of the asset being uploaded$' )
+    void 'a Content-MD5 header filled in with the digest of the asset being uploaded'() {
         specifyContentMd5()    }
 
     private specifyContentMd5()  {
@@ -197,8 +192,8 @@ class TestSteps {
         sharedState.headers.set( CustomHttpHeaders.CONTENT_MD5, sharedState.digest )
     }
 
-    @Given( '^a Content-MD(\\d+) header filled in with a digest of a different asset$' )
-    void 'a Content-MD5 header filled in with a digest of a different asset'( int ignored ) {
+    @Given( '^a Content-MD5 header filled in with a digest of a different asset$' )
+    void 'a Content-MD5 header filled in with a digest of a different asset'() {
         sharedState.digest = Base64.encoder.encodeToString( DigestUtils.md5Digest( randomByteArray( 8 ) ) )
         sharedState.headers.set( CustomHttpHeaders.CONTENT_MD5, sharedState.digest )
     }
@@ -337,7 +332,7 @@ class TestSteps {
         assert control.errorBlock.developerMessage
     }
 
-
+    @SuppressWarnings( 'UnnecessaryGetter' )
     @Then( '^the hypermedia control describing the precondition failure is returned$' )
     void 'the hypermedia control describing the precondition failure is returned'() {
         assert sharedState.uploadEntity.headers.getContentType().isCompatibleWith( HypermediaControl.MEDIA_TYPE )

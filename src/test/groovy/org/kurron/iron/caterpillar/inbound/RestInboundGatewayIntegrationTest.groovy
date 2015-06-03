@@ -15,8 +15,9 @@
  */
 package org.kurron.iron.caterpillar.inbound
 
-import org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext
 import groovy.util.logging.Slf4j
+import org.kurron.iron.caterpillar.BaseInboundIntegrationTest
+import org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext
 import org.kurron.iron.caterpillar.outbound.BinaryAssetBuilder
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -24,8 +25,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.RequestEntity
-import org.kurron.iron.caterpillar.BaseInboundIntegrationTest
-import org.springframework.util.DigestUtils
 
 /**
  * Integration-level testing of the RestInboundGateway object.
