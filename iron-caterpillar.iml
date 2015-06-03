@@ -23,7 +23,6 @@
     <orderEntry type="library" exported="" name="Gradle: org.springframework.boot:spring-boot-starter-remote-shell:1.2.3.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.springframework.boot:spring-boot-starter-security:1.2.3.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.codehaus.groovy:groovy-all:2.4.3:indy" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.kurron:tools-java:2.1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.springframework.boot:spring-boot-starter:1.2.3.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.springframework.boot:spring-boot-actuator:1.2.3.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-core:4.1.6.RELEASE" level="project" />
@@ -100,5 +99,6 @@
     <orderEntry type="library" scope="TEST" name="Gradle: info.cukes:cucumber-java:1.2.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: javax.servlet:javax.servlet-api:3.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: info.cukes:cucumber-html:0.2.3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.kurron:tools-java:2.3.0" level="project" />
   </component>
 </module>
