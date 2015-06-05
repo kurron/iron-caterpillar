@@ -340,4 +340,12 @@ class TestSteps {
         assert sharedState.uploadEntity.body.errorBlock.message
         assert sharedState.uploadEntity.body.errorBlock.developerMessage
     }
+
+    @Then( '^the hypermedia control describing the formatting problem is returned$' )
+    void 'the hypermedia control describing the formatting problem is returned'() {
+        assert sharedState.uploadEntity.headers.getContentType().isCompatibleWith( HypermediaControl.MEDIA_TYPE )
+        assert sharedState.uploadEntity.body.errorBlock.code
+        assert sharedState.uploadEntity.body.errorBlock.message
+        assert sharedState.uploadEntity.body.errorBlock.developerMessage
+    }
 }
