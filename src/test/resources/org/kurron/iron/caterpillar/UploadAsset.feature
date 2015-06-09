@@ -12,7 +12,7 @@ Feature: Upload An Asset
     And a Content-MD5 header filled in with the digest of the asset being uploaded
 
   @happy
-  @slow
+  @required
   Scenario: Successful Upload
     Given an asset to be uploaded
     When a POST request is made with the asset in the body
@@ -22,7 +22,7 @@ Feature: Upload An Asset
     And the hypermedia control contains the meta-data of the uploaded asset
 
   @sad
-  @slow
+  @required
   Scenario: Digest Does Not Match
     Given an asset to be uploaded
     And a Content-MD5 header filled in with a digest of a different asset
@@ -31,7 +31,7 @@ Feature: Upload An Asset
     And the hypermedia control describing the precondition failure is returned
 
   @sad
-  @slow
+  @required
   Scenario: Asset Too Large
     Given an asset that is too large
     When a POST request is made with the asset in the body
@@ -39,7 +39,7 @@ Feature: Upload An Asset
     And the hypermedia control describing the size problem is returned
 
   @happy
-  @slow
+  @required
   Scenario: Asset Already Exists
     Given an asset has previously been uploaded
     When a POST request is made with the previously uploaded asset in the body
@@ -49,6 +49,7 @@ Feature: Upload An Asset
     And the hypermedia control contains the meta-data of the uploaded asset
 
   @sad
+  @optional
   Scenario: Unsupported Accept Format
     Given an asset to be uploaded
     And an Accept header containing an unsupported media-type

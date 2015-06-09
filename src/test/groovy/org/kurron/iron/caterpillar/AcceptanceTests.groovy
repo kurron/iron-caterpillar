@@ -23,7 +23,7 @@ import org.junit.runner.RunWith
  * Driver for all acceptance tests.
  */
 @CucumberOptions( strict = false,
-                  tags = ['~@slow'], // by default do not run the slow tests
+                  tags = ['@required'],
                   plugin = ['pretty', 'html:build/reports/acceptanceTests'],
                   monochrome = true )
 @RunWith( Cucumber )
