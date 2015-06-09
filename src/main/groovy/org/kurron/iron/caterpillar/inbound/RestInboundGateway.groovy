@@ -215,7 +215,7 @@ class RestInboundGateway extends AbstractFeedbackAware {
      * @param id the id to embed in the response.
      * @param mimeType the MIME type of the uploaded asset.
      * @param contentLength the length, in bytes, of the uploaded asset.
-     * @param request the servlet request being serviced.
+     * @param request the servlet request being serviced. @param created
      */
     private static ResponseEntity<HypermediaControl> toResponseEntity( String id,
                                                                        String mimeType,

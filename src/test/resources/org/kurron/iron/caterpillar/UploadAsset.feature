@@ -43,7 +43,7 @@ Feature: Upload An Asset
   Scenario: Asset Already Exists
     Given an asset has previously been uploaded
     When a PUT request is made with the previously uploaded asset in the body
-    Then a response with a 201 HTTP status code is returned
+    Then a response with a 200 HTTP status code is returned
     And the Location header contains the URI of the uploaded asset
     And the hypermedia control contains the URI of the uploaded asset
     And the hypermedia control contains the meta-data of the uploaded asset
