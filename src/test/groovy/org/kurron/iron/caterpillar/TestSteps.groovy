@@ -252,15 +252,15 @@ class TestSteps {
         Thread.sleep( 1000 * 65 )
     }
 
-    @When( '^a POST request is made with the asset in the body$' )
-    void 'a POST request is made with the asset in the body'() {
+    @When( '^a PUT request is made with the asset in the body$' )
+    void 'a PUT request is made with the asset in the body'() {
         def requestEntity = new HttpEntity( sharedState.bytes, sharedState.headers )
-        sharedState.uploadEntity = sharedState.internet.postForEntity( sharedState.uri, requestEntity, HypermediaControl )
+        sharedState.uploadEntity = restOperations.exchange( sharedState.uri, HttpMethod.PUT, requestEntity, HypermediaControl )
         sharedState.statusCode = sharedState.uploadEntity.statusCode
     }
 
-    @When( '^a POST request is made with the previously uploaded asset in the body$' )
-    void '^a POST request is made with the previously uploaded asset in the body$'() {
+    @When( '^a PUT request is made with the previously uploaded asset in the body$' )
+    void '^a PUT request is made with the previously uploaded asset in the body$'() {
         // reusing steps to upload bytes is too difficult to properly manage so we invoke the steps here
         sharedState.headers = new HttpHeaders() // clear out any prior steps' headers
         specifyCorrelationID()
@@ -269,7 +269,7 @@ class TestSteps {
         specifyContentMd5()
         specifyUploadedBy()
         def requestEntity = new HttpEntity( sharedState.bytes, sharedState.headers )
-        sharedState.uploadEntity = sharedState.internet.postForEntity( sharedState.uri, requestEntity, HypermediaControl )
+        sharedState.uploadEntity = restOperations.exchange( sharedState.uri, HttpMethod.PUT, requestEntity, HypermediaControl )
         sharedState.statusCode = sharedState.uploadEntity.statusCode
     }
 

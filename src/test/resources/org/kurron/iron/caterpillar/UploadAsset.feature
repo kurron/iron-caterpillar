@@ -15,7 +15,7 @@ Feature: Upload An Asset
   @required
   Scenario: Successful Upload
     Given an asset to be uploaded
-    When a POST request is made with the asset in the body
+    When a PUT request is made with the asset in the body
     Then a response with a 201 HTTP status code is returned
     And the Location header contains the URI of the uploaded asset
     And the hypermedia control contains the URI of the uploaded asset
@@ -26,7 +26,7 @@ Feature: Upload An Asset
   Scenario: Digest Does Not Match
     Given an asset to be uploaded
     And a Content-MD5 header filled in with a digest of a different asset
-    When a POST request is made with the asset in the body
+    When a PUT request is made with the asset in the body
     Then a response with a 412 HTTP status code is returned
     And the hypermedia control describing the precondition failure is returned
 
@@ -34,7 +34,7 @@ Feature: Upload An Asset
   @required
   Scenario: Asset Too Large
     Given an asset that is too large
-    When a POST request is made with the asset in the body
+    When a PUT request is made with the asset in the body
     Then a response with a 413 HTTP status code is returned
     And the hypermedia control describing the size problem is returned
 
@@ -42,7 +42,7 @@ Feature: Upload An Asset
   @required
   Scenario: Asset Already Exists
     Given an asset has previously been uploaded
-    When a POST request is made with the previously uploaded asset in the body
+    When a PUT request is made with the previously uploaded asset in the body
     Then a response with a 201 HTTP status code is returned
     And the Location header contains the URI of the uploaded asset
     And the hypermedia control contains the URI of the uploaded asset
@@ -53,6 +53,6 @@ Feature: Upload An Asset
   Scenario: Unsupported Accept Format
     Given an asset to be uploaded
     And an Accept header containing an unsupported media-type
-    When a POST request is made with the asset in the body
+    When a PUT request is made with the asset in the body
     Then a response with a 406 HTTP status code is returned
     And the hypermedia control describing the formatting problem is returned

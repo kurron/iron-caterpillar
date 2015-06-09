@@ -21,7 +21,7 @@ import static org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext.PAYLOA
 import static org.kurron.iron.caterpillar.feedback.ExampleFeedbackContext.PRECONDITION_FAILED
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
 import static org.springframework.web.bind.annotation.RequestMethod.GET
-import static org.springframework.web.bind.annotation.RequestMethod.POST
+import static org.springframework.web.bind.annotation.RequestMethod.PUT
 import javax.servlet.http.HttpServletRequest
 import org.kurron.feedback.AbstractFeedbackAware
 import org.kurron.feedback.exceptions.LengthRequiredError
@@ -114,7 +114,7 @@ class RestInboundGateway extends AbstractFeedbackAware {
      * @param request the servlet request being serviced.
      * @return the response entity.
      */
-    @RequestMapping( method = POST, produces = HypermediaControl.MIME_TYPE )
+    @RequestMapping( method = PUT, produces = HypermediaControl.MIME_TYPE )
     ResponseEntity<HypermediaControl> store( @RequestBody final byte[] payload,
                                              @RequestHeader HttpHeaders requestHeaders,
                                              HttpServletRequest request ) {
