@@ -221,10 +221,9 @@ class RestInboundGateway extends AbstractFeedbackAware {
                                                                        String mimeType,
                                                                        int contentLength,
                                                                        HttpServletRequest request ) {
-        def control = newControl( HttpStatus.CREATED, request )
+        def control = newControl( HttpStatus.CREATED, request, Optional.of( new MetaDataBlock( mimeType: mimeType, contentLength: contentLength ) ) )
         def location = linkTo( RestInboundGateway, RestInboundGateway.getMethod( 'retrieve', String ), id )
         control.add( location.withSelfRel() )
-        control.metaDataBlock = new MetaDataBlock( mimeType: mimeType, contentLength: contentLength )
         def headers = new HttpHeaders( location: location.toUri() )
         new ResponseEntity( control, headers, HttpStatus.CREATED )
     }
@@ -250,7 +249,7 @@ class RestInboundGateway extends AbstractFeedbackAware {
      */
     @RequestMapping( method = GET, produces = [HypermediaControl.MIME_TYPE] )
     ResponseEntity<HypermediaControl> apiDiscovery( HttpServletRequest request ) {
-        def control = newControl( HttpStatus.OK, request )
+        def control = newControl( HttpStatus.OK, request, Optional.empty() )
         new ResponseEntity( control, HttpStatus.OK )
     }
 
@@ -262,9 +261,8 @@ class RestInboundGateway extends AbstractFeedbackAware {
      * @return partially populated control.
      */
     @SuppressWarnings( 'DuplicateStringLiteral' )
-    private static HypermediaControl newControl( HttpStatus status, HttpServletRequest request ) {
-        def control = new HypermediaControl()
-        control.httpCode = status.value()
+    private static HypermediaControl newControl( HttpStatus status, HttpServletRequest request, Optional<MetaDataBlock> metaData ) {
+        def control = new HypermediaControl( httpCode: status.value(), metaDataBlock: metaData.orElse( null ) )
 
         // currently, these links are always valid
         control.add( linkTo( RestInboundGateway, RestInboundGateway.getMethod( 'apiDiscovery', HttpServletRequest ) ).withRel( API_DISCOVERY_RELATION ) )
