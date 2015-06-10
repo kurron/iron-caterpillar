@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.kurron.iron.caterpillar.outbound
 
+import groovy.transform.Immutable
+
 /**
- * Interacts with the outbound persistence layer.
- */
-interface PersistenceOutboundGateway {
+ * Represents the result of inserting an asset into the system.
+ **/
+@Immutable
+class InsertionResult {
 
     /**
-     * Store the provided resource.
-     * @param asset the resource to store, which includes the content type and bytes.
-     * @return the result of the operation.
-     */
-    InsertionResult store( final BinaryAsset asset )
+     * The key to use when looking pu the asset.
+     **/
+    String id
 
     /**
-     * Retrieves the resource associated with the provided id.
-     * @param id the id of the resource to retrieve.
-     * @return the resource.
-     */
-    BinaryAsset retrieve( final String id )
+     * If true, the bytes were actually uploaded, otherwise the bytes already existed in the system.
+     **/
+    boolean inserted
 }

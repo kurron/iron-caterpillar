@@ -129,10 +129,10 @@ class RestInboundGateway extends AbstractFeedbackAware {
                                      size: payload.size(),
                                      md5: digest,
                                      payload: payload )
-        def id = outboundGateway.store( asset )
+        def results = outboundGateway.store( asset )
         counterService.increment( 'iron-caterpillar.upload' )
         gaugeService.submit( 'iron-caterpillar.upload.payload.size', payload.length )
-        toResponseEntity( id, contentType.toString(), payload.length, request )
+        toResponseEntity( results.id, contentType.toString(), payload.length, request, results.inserted ? HttpStatus.CREATED : HttpStatus.OK )
     }
 
     private void validateDigest( byte[] payload, String digest ) {
@@ -220,12 +220,13 @@ class RestInboundGateway extends AbstractFeedbackAware {
     private static ResponseEntity<HypermediaControl> toResponseEntity( String id,
                                                                        String mimeType,
                                                                        int contentLength,
-                                                                       HttpServletRequest request ) {
-        def control = newControl( HttpStatus.CREATED, request, Optional.of( new MetaDataBlock( mimeType: mimeType, contentLength: contentLength ) ) )
+                                                                       HttpServletRequest request,
+                                                                       HttpStatus status ) {
+        def control = newControl( status, request, Optional.of( new MetaDataBlock( mimeType: mimeType, contentLength: contentLength ) ) )
         def location = linkTo( RestInboundGateway, RestInboundGateway.getMethod( 'retrieve', String ), id )
         control.add( location.withSelfRel() )
         def headers = new HttpHeaders( location: location.toUri() )
-        new ResponseEntity( control, headers, HttpStatus.CREATED )
+        new ResponseEntity( control, headers, status )
     }
 
     /**

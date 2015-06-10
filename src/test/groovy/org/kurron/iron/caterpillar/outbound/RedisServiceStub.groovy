@@ -30,9 +30,9 @@ class RedisServiceStub extends AbstractFeedbackAware implements PersistenceOutbo
     private final Map<String,BinaryAsset> redis = [:]
 
     @Override
-    String store( final BinaryAsset resource ) {
+    InsertionResult store( final BinaryAsset resource ) {
         redis[resource.md5] = resource
-        resource.md5
+        new InsertionResult( id: resource.md5, inserted: true )
     }
 
     @Override

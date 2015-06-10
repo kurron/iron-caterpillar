@@ -62,11 +62,13 @@ class RedisOutboundGateway extends AbstractFeedbackAware implements PersistenceO
     }
 
     @Override
-    String store( final BinaryAsset asset ) {
+    InsertionResult store( final BinaryAsset asset ) {
         feedbackProvider.sendFeedback( REDIS_STORE_INFO, asset.size, asset.contentType, asset.uploadedBy, asset.md5 )
 
+        final InsertionResult result
         if ( redisOperations.opsForHash().keys( asset.md5 ) ) {
             feedbackProvider.sendFeedback( ExampleFeedbackContext.DUPLICATE_UPLOAD, asset.md5 )
+            result = new InsertionResult( id: asset.md5, inserted: false )
         }
         else {
             Map<String,String> data = [(CONTENT_TYPE_KEY): asset.contentType,
@@ -74,8 +76,9 @@ class RedisOutboundGateway extends AbstractFeedbackAware implements PersistenceO
                                        (SIZE_KEY): Integer.toString( asset.size ),
                                        (PAYLOAD_KEY): Base64.encoder.encodeToString( asset.payload ) ]
             redisOperations.opsForHash().putAll( asset.md5, data )
+            result = new InsertionResult( id: asset.md5, inserted: true )
         }
-        asset.md5
+        result
     }
 
     @Override

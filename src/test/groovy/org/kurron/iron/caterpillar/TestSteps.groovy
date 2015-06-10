@@ -225,7 +225,8 @@ class TestSteps {
         specifyContentMd5()
         specifyUploadedBy()
         def requestEntity = new HttpEntity( sharedState.bytes, sharedState.headers )
-        sharedState.location = sharedState.internet.postForLocation( sharedState.uri, requestEntity )
+        sharedState.uploadEntity = restOperations.exchange( sharedState.uri, HttpMethod.PUT, requestEntity, HypermediaControl )
+        assert sharedState.uploadEntity.statusCode == HttpStatus.CREATED
         sharedState.headers = new HttpHeaders() // reset for the remaining steps
         log.error( 'sharedState.location = {}', sharedState.location )
     }
