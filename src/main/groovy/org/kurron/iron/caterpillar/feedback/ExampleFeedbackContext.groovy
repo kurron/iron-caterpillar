@@ -38,7 +38,7 @@ enum ExampleFeedbackContext implements FeedbackContext {
     PAYLOAD_TOO_LARGE( 2006, 'The payload size of {} Bytes exceeds the maximum permitted size of {} Megabytes', ERROR, QA ),
     MISSING_CORRELATION_ID( 2007, 'A correlation id was missing from a request, and an auto-generated id of {} will be used instead', FeedbackLevel.WARN, QA ),
     DIGEST_MISMATCH( 2008, 'The provided MD5 value of {} does not match the calculated value of {}', FeedbackLevel.WARN, QA ),
-    DUPLICATE_UPLOAD( 2009, 'The asset {} has previously been upl', FeedbackLevel.WARN, QA )
+    DUPLICATE_UPLOAD( 2009, 'The asset {} has previously been uploaded', FeedbackLevel.WARN, QA )
 
     /**
      * Unique context code for this instance.
